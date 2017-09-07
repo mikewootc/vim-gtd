@@ -52,16 +52,23 @@ EOF
 " Main stuff
 " ------------------------------------------------------------------------------
 
-" Toggle fold level: 0, 1, 2
+" Toggle fold
 func! ToggleFold()
-    let b:fold_status += 1
-    if b:fold_status > 2
-        let b:fold_status = 0
-        exec "normal zM"
-    else
-        exec "normal zr"
+    if foldlevel('.') > 0
+        if foldclosed('.') != -1 " Folded
+            exec "normal zO"
+        else
+            exec "normal zC"
+        endif
     endif
-    echo "Fold: " . b:fold_status
+"    let b:fold_status += 1
+"    if b:fold_status > 2
+"        let b:fold_status = 0
+"        exec "normal zM"
+"    else
+"        exec "normal zr"
+"    endif
+"    echo "Fold: " . b:fold_status
 endfunc
 
 " Get date of specific type
@@ -318,9 +325,11 @@ if g:gtd_auto_check_overdue
     autocmd BufEnter *.gtd silent! call CheckOverdue()
 endif
 
-nnoremap <TAB> :call ToggleFold()<CR>
-nnoremap <silent> <leader>gp <ESC>:call AddDate("p", 101)<cr>  | "gtd plan date
-nnoremap <silent> <leader>gf <ESC>:call AddDate("f", 115)<cr>  | "gtd finish task(Add finish date)
-nnoremap <silent> <leader>gc :call CheckOverdue()<cr>
-nnoremap <silent> <leader>gt :call TaskList()<cr>
+autocmd FileType gtd nnoremap <buffer> <TAB> :call ToggleFold()<CR>
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gp <ESC>:call AddDate("p", 101)<cr>  | "gtd plan date
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gf <ESC>:call AddDate("f", 115)<cr>  | "gtd finish task(Add finish date)
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gc :call CheckOverdue()<cr>
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gt :call TaskList()<cr>
+
+autocmd FileType gtd inoremap <buffer> [] [ ] 
 

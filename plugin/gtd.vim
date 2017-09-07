@@ -12,7 +12,7 @@ endfunc
 
 
 
-autocmd FileType gtd inoremap [] [ ] 
+"autocmd FileType gtd inoremap [] [ ] 
 
 command! -nargs=0 Gtdo :call OpenGtd()
 
