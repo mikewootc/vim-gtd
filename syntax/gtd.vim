@@ -34,8 +34,9 @@ syn match   gtdHighPrioSteps "^\s*\[\*\] " contains=ALL
 
 " ----------------------------------------
 " Substeps
-syn match   gtdSubstep "\s\+\*.\+"
-syn match   gtdSubstep "^\*.\+"
+"syn match   gtdSubstep "\s\+\*.\+" contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdSubstep "^\*.\+" contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Finished
@@ -43,11 +44,11 @@ syn match   gtdFinished ".\+\[f:[0-9]\{4}.[0-9]\{2}.[0-9]\{2}\]"
 
 " ----------------------------------------
 " Context
-syn match   gtdContext "#\w\+#"
+syn match   gtdContext " #[^#]*# "
 
 " ----------------------------------------
 " Worker
-syn match   gtdWorker "@\w\+"
+syn match   gtdWorker " @.\+ "
 
 " ----------------------------------------
 " Comment
