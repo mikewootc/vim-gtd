@@ -1,0 +1,37 @@
+============================================================================
+[[TestTitle]]
+    [ ] parent task
+        [ ] This is a unassigned task.
+        [ ] This is another unassigned task.
+        [ ] This is a planned task.                                                                 [p:2017-08-26]
+        [ ] This is another planned task.                                                           [p:2017-08-27]
+        [ ] #Home# This is context show.
+        [ ] #Home# This is context show with date.                                                  [p:2017-08-27]
+        [ ] #Office# This is context emergency.                                                     [e:2017-08-27]
+        [ ] #Office# This is context overdue.                                                       [o:2017-08-27]
+        [ ] This is worker show. @Mike
+        [ ] This is worker show with date. @Mike                                                    [p:2017-08-27]
+    [ ] This is worker emergency. @Mike                                                             [e:2017-08-27]
+    [ ] This is worker overdue. @Mike                                                               [o:2017-08-27]
+    [*] This is a high priority task.                                                               [p:2017-08-28]
+    [*] This is a high priority task without date.
+    [ ] This is a emergency task.                                                                   [e:2017-08-26]
+    [ ] This is a overdued task.                                                                    [o:2017-08-26]
+    [ ] This is a finished task.                                                                                  [f:2017-08-26]
+    [ ] This is another finished task.                                                              [p:2017-08-26][f:2017-08-26]
+            * Subtask
+            * Subtask2
+            // Comment
+            // Folded {{{
+                  Folded.
+                  Folded2.
+                  Folded3.
+            }}}
+[[Inbox]]
+    [ ] task1
+    [ ] task2
+[[Someday]]
+    [ ] some1
+    [ ] some2
+
+// vim:set filetype=gtd:
