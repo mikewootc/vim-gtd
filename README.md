@@ -21,6 +21,7 @@ The easiest way to get started is playing around with the example file gtd/test/
     <leader>gf : Add gtd finish date.
     <leader>gc : Check if any task is overdue.
     <leader>gt : Show the planned tasks in a splited window, with emergency and overdued task included.
+    <tab>      : Switch folding status(between zO and zC).
 
 ## Config
 
