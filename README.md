@@ -9,9 +9,9 @@ Overview:
 ![overview](./test/overview.png)
 
 
-Tasklive overview:
+Tasklist overview:
 
-![tasklive overview](./test/tasklist.png)
+![tasklist overview](./test/tasklist.png)
 
 ## Usage
 
