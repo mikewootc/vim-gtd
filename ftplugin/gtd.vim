@@ -320,9 +320,9 @@ endfunc
 " personal {{{
 func! GetTaskLine()
     let taskLine = getline(".")
-    let taskLine = substitute(taskLine, '^\s*\[.\]', "", "")
+    let taskLine = substitute(taskLine, '^\s*\[.\] *', "", "")
     let taskLine = substitute(taskLine, '\s*\[.:\d\{4}-\d\{2}-\d\{2}\]', "", "")
-    let taskLine = taskLine . " 明天"
+    let taskLine = "'" . taskLine . " 明天'"
     return taskLine
 endfunc
 autocmd FileType gtd nnoremap <buffer> <leader>gs :!tt <c-r>=GetTaskLine()<cr>
