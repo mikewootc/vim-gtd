@@ -317,6 +317,17 @@ function! GtdBufInit()
     let b:fold_status=0
 endfunc
 
+" personal {{{
+func! GetTaskLine()
+    let taskLine = getline(".")
+    let taskLine = substitute(taskLine, '^\s*\[.\]', "", "")
+    let taskLine = substitute(taskLine, '\s*\[.:\d\{4}-\d\{2}-\d\{2}\]', "", "")
+    let taskLine = taskLine . " 明天"
+    return taskLine
+endfunc
+autocmd FileType gtd nnoremap <buffer> <leader>gs :!tt <c-r>=GetTaskLine()<cr>
+" personal }}}
+
 autocmd BufEnter __gtd_task_list__ call TaskListBufInit()
 autocmd BufEnter *.gtd  call GtdBufInit()
 autocmd BufEnter *.gtdt call GtdBufInit()
@@ -332,4 +343,3 @@ autocmd FileType gtd nnoremap <buffer> <silent> <leader>gc :call CheckOverdue()<
 autocmd FileType gtd nnoremap <buffer> <silent> <leader>gt :call TaskList()<cr>
 
 autocmd FileType gtd inoremap <buffer> [] [ ] 
-
