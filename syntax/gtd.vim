@@ -51,13 +51,16 @@ syn match   gtdContext " #[^#]*# "
 syn match   gtdWorker " @.\+ "
 
 " ----------------------------------------
-" Comment
-syn match   gtdComment "\/\/.*"
-"syntax region gtdComment start="/\*" end="\*/" fold
+" Bold
+syn region gtdBold matchgroup=gtdBoldMark start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend oneline concealends
 
 " ----------------------------------------
-" Folding
-"highlight Folded guibg=black guifg=#606060
+" Note
+syn match   gtdNote "^\s*>.*" contains=ALL
+
+" ----------------------------------------
+" Comment
+syn match   gtdComment "\/\/.*"
 
 " ----------------------------------------
 " Brace
@@ -75,10 +78,12 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdEmergencySteps       hl_yellow
     hi  link    gtdOverdueSteps         hl_red
     hi  link    gtdHighPrioSteps        hl_orange_l
-    hi  link    gtdSubstep              Comment
+    hi  link    gtdSubstep              PreProc
     hi  link    gtdFinished             hl_green_d
     hi  link    gtdContext              hl_cyan
     hi  link    gtdWorker               hl_brown
+    hi          gtdBold                 cterm=bold              gui=bold
+    hi  link    gtdNote                 Comment
     hi  link    gtdComment              Comment
     hi          gtdBrace                ctermfg=DarkGray        guifg=#303030
 else
@@ -88,12 +93,14 @@ else
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlannedSteps         ctermfg=Cyan            guifg=Cyan
     hi          gtdEmergencySteps       ctermfg=DarkYellow      guifg=DarkYellow
-    hi          gtdOverdueSteps         ctermfg=Red             guifg=Red       term=bold   gui=bold
+    hi          gtdOverdueSteps         ctermfg=Red             guifg=Red
     hi          gtdHighPrioSteps        ctermfg=DarkYellow      guifg=DarkYellow
-    hi          gtdSubstep              ctermfg=Darkgray        guifg=DarkGray
+    hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
     hi          gtdContext              ctermfg=DarkCyan        guifg=DarkCyan
-    hi          gtdWorker               ctermfg=DarkBlue        guifg=DarkBlue
+    hi          gtdWorker               ctermfg=Blue            guifg=Blue
+    hi          gtdBold                 cterm=bold              gui=bold
+    hi          gtdNote                 ctermfg=DarkGray        guifg=DarkGray
     hi          gtdComment              ctermfg=DarkGray        guifg=DarkGray
     hi          gtdBrace                ctermfg=DarkGray        guifg=DarkGray
 endif
