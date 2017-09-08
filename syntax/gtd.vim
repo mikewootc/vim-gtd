@@ -49,6 +49,8 @@ syn match   gtdContext " #[^#]*# "
 " ----------------------------------------
 " Worker
 syn match   gtdWorker " @.\+ "
+syn match   gtdWorker "^@.\+ "
+syn match   gtdWorker " @.\+$"
 
 " ----------------------------------------
 " Bold
