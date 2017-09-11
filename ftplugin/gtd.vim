@@ -17,13 +17,22 @@ if !exists("g:gtd_emergency_days")
     let g:gtd_emergency_days = 7
 endif
 
+if !exists("g:gtd_date_align_col")
+    let g:gtd_date_align_col = 101
+endif
+
+if !exists("g:gtd_align_date_when_exit_insert")
+    let g:gtd_align_date_when_exit_insert = 1
+endif
+
 
 let g:taskBufferName = "__gtd_task_list__"
+let g:dateWidth = 14
 
-if exists("loaded_gtd") || &cp
+if exists("b:loaded_gtd") || &cp
   finish
 endif
-let loaded_gtd = 1
+let b:loaded_gtd = 1
 
 " ------------------------------------------------------------------------------
 " Python stuff
@@ -91,6 +100,39 @@ func! AddDate(dateType, colNum)
     let width = virtcol(".")
     let newLine = line . repeat(" ", a:colNum - width - 1) . strftime("[" . a:dateType . ":%Y-%m-%d]")
     call setline(".", newLine)
+endfunc
+
+func! AlignDate(dateType, colNum)
+    let line = getline(".")
+    let planDateCol = match(line, '\[' . a:dateType . ':')
+    if planDateCol > 0
+        if planDateCol > a:colNum       " Should move left
+            let leftSpaceCol = match(line, ' \+\[' . a:dateType . ':')
+            if leftSpaceCol < planDateCol " Could move
+                let couldMove  = planDateCol - leftSpaceCol - 1
+                let shouldMove = planDateCol - a:colNum + 1
+                let shouldMove = couldMove >= shouldMove ? shouldMove : couldMove
+                echo 
+                let newLine = substitute(line, repeat(" ", shouldMove) . '\(\[' . a:dateType . '\)', '\1', '')
+                call setline(".", newLine)
+            endif
+        elseif planDateCol < a:colNum   " Should move right
+            let shouldMove = a:colNum - planDateCol - 1
+            let newLine = substitute(line, '\(\[' . a:dateType . '\)', repeat(" ", shouldMove) . '\1', '')
+            call setline(".", newLine)
+        endif
+    endif
+    "exec "normal $"
+    "let width = virtcol(".")
+    "let newLine = line . repeat(" ", a:colNum - width - 1) . strftime("[" . a:dateType . ":%Y-%m-%d]")
+    "call setline(".", newLine)
+endfunc
+
+func! AlignDateAllKinds()
+    echo 'AlignDateAllKinds'
+    call AlignDate('[poe]', g:gtd_date_align_col)
+    "echo g:gtd_date_align_col + g:dateWidth
+    call AlignDate('f', g:gtd_date_align_col + g:dateWidth)
 endfunc
 
 " Check if the tasks if overdued or emergency.
@@ -337,9 +379,11 @@ if g:gtd_auto_check_overdue
 endif
 
 autocmd FileType gtd nnoremap <buffer> <TAB> :call ToggleFold()<CR>
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gp <ESC>:call AddDate("p", 101)<cr>  | "gtd plan date
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gf <ESC>:call AddDate("f", 115)<cr>  | "gtd finish task(Add finish date)
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gp <ESC>:call AddDate("p", g:gtd_date_align_col)<cr>| "gtd plan date
+autocmd FileType gtd nnoremap <buffer> <silent> <leader>gf <ESC>:call AddDate("f", g:gtd_date_align_col + g:dateWidth)<cr>| "gtd finish task(Add finish date)
 autocmd FileType gtd nnoremap <buffer> <silent> <leader>gc :call CheckOverdue()<cr>
 autocmd FileType gtd nnoremap <buffer> <silent> <leader>gt :call TaskList()<cr>
+"autocmd InsertLeave FileType gtd call AlignDateAllKinds()
+autocmd InsertLeave *.gtd call AlignDateAllKinds()
 
 autocmd FileType gtd inoremap <buffer> [] [ ] 
