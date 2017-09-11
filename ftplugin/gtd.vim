@@ -29,10 +29,10 @@ endif
 let g:taskBufferName = "__gtd_task_list__"
 let g:dateWidth = 14
 
-if exists("b:loaded_gtd") || &cp
+if exists("g:loaded_gtd") || &cp
   finish
 endif
-let b:loaded_gtd = 1
+let g:loaded_gtd = 1
 
 " ------------------------------------------------------------------------------
 " Python stuff
@@ -102,12 +102,22 @@ func! AddDate(dateType, colNum)
     call setline(".", newLine)
 endfunc
 
-func! AlignDate(dateType, colNum)
+" Get virtcol of pat in cursor-line.
+func! GetVirtCol(pat)
     let line = getline(".")
-    let planDateCol = match(line, '\[' . a:dateType . ':')
+    let theMatch = match(line, a:pat)
+    call cursor(".", theMatch)
+    let theVirtCol = virtcol(".")
+    return theVirtCol
+endfunc
+
+" Align specified date
+func! AlignSpeciDate(dateType, colNum)
+    let line = getline(".")
+    let planDateCol = GetVirtCol('\[' . a:dateType . ':')
     if planDateCol > 0
         if planDateCol > a:colNum       " Should move left
-            let leftSpaceCol = match(line, ' \+\[' . a:dateType . ':')
+            let leftSpaceCol = GetVirtCol(' \+\[' . a:dateType . ':')
             if leftSpaceCol < planDateCol " Could move
                 let couldMove  = planDateCol - leftSpaceCol - 1
                 let shouldMove = planDateCol - a:colNum + 1
@@ -122,17 +132,12 @@ func! AlignDate(dateType, colNum)
             call setline(".", newLine)
         endif
     endif
-    "exec "normal $"
-    "let width = virtcol(".")
-    "let newLine = line . repeat(" ", a:colNum - width - 1) . strftime("[" . a:dateType . ":%Y-%m-%d]")
-    "call setline(".", newLine)
 endfunc
 
-func! AlignDateAllKinds()
-    echo 'AlignDateAllKinds'
-    call AlignDate('[poe]', g:gtd_date_align_col)
-    "echo g:gtd_date_align_col + g:dateWidth
-    call AlignDate('f', g:gtd_date_align_col + g:dateWidth)
+func! AlignDate()
+    echo 'AlignDate'
+    call AlignSpeciDate('[poe]', g:gtd_date_align_col)
+    call AlignSpeciDate('f',     g:gtd_date_align_col + g:dateWidth)
 endfunc
 
 " Check if the tasks if overdued or emergency.
@@ -370,6 +375,17 @@ endfunc
 autocmd FileType gtd nnoremap <buffer> <leader>gs :!tt <c-r>=GetTaskLine()<cr>
 " personal }}}
 
+
+" Commands =====================================================================
+command! ToggleFold         call ToggleFold()
+command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
+command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
+command! CheckOverdue       call CheckOverdue()
+command! TaskList           call TaskList()
+command! AlignDate          call AlignDate()
+
+
+
 autocmd BufEnter __gtd_task_list__ call TaskListBufInit()
 autocmd BufEnter *.gtd  call GtdBufInit()
 autocmd BufEnter *.gtdt call GtdBufInit()
@@ -378,12 +394,3 @@ if g:gtd_auto_check_overdue
     autocmd BufEnter *.gtd silent! call CheckOverdue()
 endif
 
-autocmd FileType gtd nnoremap <buffer> <TAB> :call ToggleFold()<CR>
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gp <ESC>:call AddDate("p", g:gtd_date_align_col)<cr>| "gtd plan date
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gf <ESC>:call AddDate("f", g:gtd_date_align_col + g:dateWidth)<cr>| "gtd finish task(Add finish date)
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gc :call CheckOverdue()<cr>
-autocmd FileType gtd nnoremap <buffer> <silent> <leader>gt :call TaskList()<cr>
-"autocmd InsertLeave FileType gtd call AlignDateAllKinds()
-autocmd InsertLeave *.gtd call AlignDateAllKinds()
-
-autocmd FileType gtd inoremap <buffer> [] [ ] 
