@@ -12,7 +12,11 @@ syn match   gtdDate "[0-9]\{4}\-[0-9]\{2}\-[0-9]\{2}"
 
 " ----------------------------------------
 " Plan date
-syn region  gtdPlanDate start=/\[p:/ end=/\]/ contains=gtdDate
+syn region  gtdPlanDate start=/\[p:/ end=/\]/ oneline contains=gtdDate
+
+" ----------------------------------------
+" Overdue date
+syn region  gtdOverdueDate start=/\[o:/ end=/\]/ oneline
 
 " ----------------------------------------
 " Normal Task(planned)
@@ -34,13 +38,12 @@ syn match   gtdHighPrioSteps "^\s*\[\*\] " contains=ALL
 
 " ----------------------------------------
 " Substeps
-"syn match   gtdSubstep "\s\+\*.\+" contains=gtdDate,gtdContext,gtdWorker
-"syn match   gtdSubstep "^\*.\+" contains=gtdDate,gtdContext,gtdWorker
 syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Finished
-syn match   gtdFinished ".\+\[f:[0-9]\{4}.[0-9]\{2}.[0-9]\{2}\]"
+"syn match   gtdFinished '.\+\(\[f:\)\@='
+syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate
 
 " ----------------------------------------
 " Context
@@ -48,9 +51,9 @@ syn match   gtdContext " #[^#]*# "
 
 " ----------------------------------------
 " Worker
-syn match   gtdWorker " @.\+ "
-syn match   gtdWorker "^@.\+ "
-syn match   gtdWorker " @.\+$"
+syn match   gtdWorker " @\S\+ "
+syn match   gtdWorker "^@\S\+ "
+syn match   gtdWorker " @\S\+$"
 
 " ----------------------------------------
 " Bold
@@ -74,6 +77,7 @@ syn match   gtdBrace "}}}\d*"
 if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdSeparator            Special
     hi  link    gtdDate                 String
+    hi  link    gtdOverdueDate          hl_red
     hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
     hi  link    gtdPlannedSteps         hl_blue
@@ -91,11 +95,12 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
 else
     hi          gtdSeparator            ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdDate                 ctermfg=DarkCyan        guifg=DarkCyan
+    hi          gtdOverdueDate          ctermfg=DarkRed         guifg=DarkRed
     hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlannedSteps         ctermfg=Cyan            guifg=Cyan
     hi          gtdEmergencySteps       ctermfg=DarkYellow      guifg=DarkYellow
-    hi          gtdOverdueSteps         ctermfg=Red             guifg=Red
+    hi          gtdOverdueSteps         ctermfg=DarkRed         guifg=DarkRed
     hi          gtdHighPrioSteps        ctermfg=DarkYellow      guifg=DarkYellow
     hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
