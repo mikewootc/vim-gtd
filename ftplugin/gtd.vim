@@ -61,6 +61,15 @@ EOF
 " Main stuff
 " ------------------------------------------------------------------------------
 
+" Get virtcol of pat in cursor-line.
+func! GetVirtCol(pat)
+    let line = getline(".")
+    let theMatch = match(line, a:pat)
+    call cursor(".", theMatch)
+    let theVirtCol = virtcol(".")
+    return theVirtCol
+endfunc
+
 " Toggle fold
 func! ToggleFold()
     if foldlevel('.') > 0
@@ -102,15 +111,6 @@ func! AddDate(dateType, colNum)
     call setline(".", newLine)
 endfunc
 
-" Get virtcol of pat in cursor-line.
-func! GetVirtCol(pat)
-    let line = getline(".")
-    let theMatch = match(line, a:pat)
-    call cursor(".", theMatch)
-    let theVirtCol = virtcol(".")
-    return theVirtCol
-endfunc
-
 " Align specified date
 func! AlignSpeciDate(dateType, colNum)
     let line = getline(".")
@@ -148,30 +148,29 @@ func! CheckOverdue()
 
     while i <= totalLines
         let line = getline(i)                                   "echom line
-        let planDate = GetDate(line, "p")
-        if ! planDate
-            let planDate = GetDate(line, "e")
-        endif                                                   "echom 'planDate: ' . planDate
+        let planDate = GetDate(line, "[peo]")
         let completeDate = GetDate(line, "f")                   "echom 'completeDate: ' . completeDate
         if completeDate
             "echom "Completed"
         else " Not completed
             let today = strftime("%Y%m%d")
             if planDate
-                if today > planDate " overdue
+                if today > planDate                     " overdue
                     if match(line, '\[[ep]:') > 0
                         let repl = substitute(line, '\[[ep]:', "[o:", "")
                         call setline(i, repl)
                     endif
                 else
                     python DateDiffer(vim.eval("today"), vim.eval("planDate"))
-                    if b:pyRet < g:gtd_emergency_days " emergency
+                    if b:pyRet < g:gtd_emergency_days   " emergency
                         if match(line, '\[[op]:') > 0
                             let repl = substitute(line, '\[[op]:', "[e:", "")
                             call setline(i, repl)
                         endif
-                    else
+                    else                                " just planned
                         if match(line, '\[[oe]:') > 0
+                            echom line
+                            echom "planned"
                             let repl = substitute(line, '\[[oe]:', "[p:", "")
                             call setline(i, repl)
                         endif
