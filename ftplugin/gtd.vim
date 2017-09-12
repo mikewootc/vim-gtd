@@ -65,8 +65,10 @@ EOF
 func! GetVirtCol(pat)
     let line = getline(".")
     let theMatch = match(line, a:pat)
+    let cursorBak = getcurpos()
     call cursor(".", theMatch)
     let theVirtCol = virtcol(".")
+    call cursor(cursorBak[1], cursorBak[2])
     return theVirtCol
 endfunc
 
