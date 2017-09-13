@@ -171,8 +171,6 @@ func! CheckOverdue()
                         endif
                     else                                " just planned
                         if match(line, '\[[oe]:') > 0
-                            echom line
-                            echom "planned"
                             let repl = substitute(line, '\[[oe]:', "[p:", "")
                             call setline(i, repl)
                         endif
