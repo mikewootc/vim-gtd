@@ -25,6 +25,8 @@ if !exists("g:gtd_align_date_when_exit_insert")
     let g:gtd_align_date_when_exit_insert = 1
 endif
 
+setlocal fo-=t fo+=roql
+setlocal comments=://
 
 let g:taskBufferName = "__gtd_task_list__"
 let g:dateWidth = 14

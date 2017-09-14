@@ -34,7 +34,10 @@ syn match   gtdOverdueSteps "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWo
 " ----------------------------------------
 " High prio Task
 syn match   gtdHighPrioSteps "^\s*\[\*\] " contains=ALL
-"hi          gtdHighSteps ctermfg=DarkYellow   guifg=DarkYellow
+
+" ----------------------------------------
+" Low prio Task
+syn match   gtdLowPrioSteps "^\s*\[\.\] " contains=ALL
 
 " ----------------------------------------
 " Substeps
@@ -84,6 +87,7 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdEmergencySteps       hl_yellow
     hi  link    gtdOverdueSteps         hl_red
     hi  link    gtdHighPrioSteps        hl_orange_l
+    hi  link    gtdLowPrioSteps         Comment
     hi  link    gtdSubstep              PreProc
     hi  link    gtdFinished             hl_green_d
     hi  link    gtdContext              hl_cyan
@@ -102,6 +106,7 @@ else
     hi          gtdEmergencySteps       ctermfg=DarkYellow      guifg=DarkYellow
     hi          gtdOverdueSteps         ctermfg=DarkRed         guifg=DarkRed
     hi          gtdHighPrioSteps        ctermfg=DarkYellow      guifg=DarkYellow
+    hi          gtdLowPrioSteps         ctermfg=DarkGray        guifg=DarkGray
     hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
     hi          gtdContext              ctermfg=DarkCyan        guifg=DarkCyan
