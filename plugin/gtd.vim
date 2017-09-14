@@ -9,6 +9,7 @@ func! OpenGtd()
     endfor
 endfunc
 
+autocmd BufRead,BufNewFile *.gtd         setf gtd
 
 " Commands =====================================================================
 command! -nargs=0 Gtdo :call OpenGtd()
