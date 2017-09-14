@@ -1,3 +1,9 @@
+" Quit when a (custom) syntax file was already loaded
+if exists("b:current_syntax")
+  finish
+endif
+
+
 " ----------------------------------------
 " Separator line
 syn match   gtdSeparator ".*=\{40}=.*"
@@ -116,5 +122,8 @@ else
     hi          gtdComment              ctermfg=DarkGray        guifg=DarkGray
     hi          gtdBrace                ctermfg=DarkGray        guifg=DarkGray
 endif
+
+
+let b:current_syntax = "gtd"
 
 " vim: ts=4

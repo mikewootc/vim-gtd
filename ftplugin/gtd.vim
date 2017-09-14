@@ -25,16 +25,22 @@ if !exists("g:gtd_align_date_when_exit_insert")
     let g:gtd_align_date_when_exit_insert = 1
 endif
 
-setlocal fo-=t fo+=roql
-setlocal comments=://
-
 let g:taskBufferName = "__gtd_task_list__"
 let g:dateWidth = 14
 
-if exists("g:loaded_gtd") || &cp
+
+" Only do this when not done yet for this buffer
+if exists("b:did_ftplugin")
   finish
 endif
-let g:loaded_gtd = 1
+
+" Don't load another plugin for this buffer
+let b:did_ftplugin = 1
+
+"if exists("b:loaded_gtd") || &cp
+"  finish
+"endif
+"let b:loaded_gtd = 1
 
 " ------------------------------------------------------------------------------
 " Python stuff
@@ -349,7 +355,7 @@ func! TaskList()
 endfunc
 
 function! TaskListBufInit()
-    setlocal filetype=gtd
+    setlocal filetype=gtt
     setlocal buftype=nofile
     setlocal bufhidden=hide
     setlocal nobuflisted
@@ -385,8 +391,6 @@ command! CheckOverdue       call CheckOverdue()
 command! TaskList           call TaskList()
 command! AlignDate          call AlignDate()
 
-
-
 autocmd BufEnter __gtd_task_list__ call TaskListBufInit()
 autocmd BufEnter *.gtd  call GtdBufInit()
 autocmd BufEnter *.gtdt call GtdBufInit()
@@ -394,4 +398,8 @@ autocmd BufEnter *.gtdt call GtdBufInit()
 if g:gtd_auto_check_overdue
     autocmd BufEnter *.gtd silent! call CheckOverdue()
 endif
+
+" Setting ======================================================================
+setlocal fo-=t fo-=c fo+=roql
+setlocal comments=://
 
