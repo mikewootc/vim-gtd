@@ -103,6 +103,53 @@ func! ToggleFold()
 "    echo "Fold: " . b:fold_status
 endfunc
 
+" return: [1, type, date(2017-09-16)] if true; [0, "", ""]: if false
+func! IsCursorOnDate()
+    let keywordBak = &iskeyword
+    set iskeyword+=-
+    set iskeyword+=:
+    let word = expand('<cword>')
+    let &iskeyword = keywordBak
+
+    if match(word, '\a:\d\{4}-\d\{2}-\d\{2}') >= 0
+        let ret = extend([1], split(word, ':'))
+        return ret
+    else
+        return [0, '', '']
+    endif
+endfunc
+
+function! SelectDate()
+    let ret = IsCursorOnDate()
+    if ret[0] == 1
+        "echom "is on date"
+        let g:preBufNr = bufnr('%')
+        "echom 'in gtd preBufNr: ' . g:preBufNr
+        call Calendar(0)
+    endif
+endfunc
+
+function! SelectDateAfter()
+    let ret = IsCursorOnDate()
+    if ret[0] == 1 && exists("g:calendarSelectedDate")
+        let year    = g:calendarSelectedDate[0]
+        let month   = g:calendarSelectedDate[1]
+        if month < 10
+            let month = '0' . month
+        endif
+        let day     = g:calendarSelectedDate[2]
+        if day < 10
+            let day = '0' . day
+        endif
+        let dateString = year . "-" . month . "-" . day
+
+        let line = getline(".")
+        let newLine = substitute(line, '\[' . ret[1] . ':' . '\d\{4}-\d\{2}-\d\{2}' . '\]', '\[' . ret[1] . ':' . dateString . '\]', '')
+        call setline(".", newLine)
+    endif
+endfunc
+
+
 " Get date of specific type
 " line  : text content of line
 " type  : "p":plan ; "f":complete; "e":emergency; "o":overdue
@@ -136,7 +183,6 @@ func! AlignSpeciDate(dateType, colNum)
                 let couldMove  = planDateCol - leftSpaceCol - 1
                 let shouldMove = planDateCol - a:colNum + 1
                 let shouldMove = couldMove >= shouldMove ? shouldMove : couldMove
-                echo 
                 let newLine = substitute(line, repeat(" ", shouldMove) . '\(\[' . a:dateType . '\)', '\1', '')
                 call setline(".", newLine)
             endif
@@ -149,7 +195,6 @@ func! AlignSpeciDate(dateType, colNum)
 endfunc
 
 func! AlignDate()
-    echo 'AlignDate'
     call AlignSpeciDate('[poe]', g:gtd_date_align_col)
     call AlignSpeciDate('f',     g:gtd_date_align_col + g:dateWidth)
 endfunc
@@ -417,6 +462,9 @@ command! AlignDate          call AlignDate()
 
 autocmd BufEnter        __gtd_task_list__   call TaskListBufInit()
 autocmd BufEnter        *.gtd,*.gtdt        call GtdBufInit()
+if g:gtd_pickup_date_from_calendar
+autocmd BufEnter        *.gtd,*.gtdt        call SelectDateAfter()
+endif
 if g:gtd_auto_update_tasklist
 autocmd BufWritePost    *.gtd,*.gtdt        call TaskListUpdate()
 endif
