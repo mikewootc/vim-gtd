@@ -105,6 +105,11 @@ endfunc
 
 " return: [1, type, date(2017-09-16)] if true; [0, "", ""]: if false
 func! IsCursorOnDate()
+    let c = getline('.')[col('.')-1]  " only one character under cursor
+    if c == ' '
+        return [0, '', '']
+    endif
+
     let keywordBak = &iskeyword
     set iskeyword+=-
     set iskeyword+=:
@@ -294,7 +299,7 @@ endfunc
 " Open a window to show task list.
 " list  : the task lines to show. Each item of the list is a text line.
 " return: none
-func! OpenTaskList(list)
+func! TaskListOpen(list)
     " Open list buffer
     let listBufNum = bufnr(g:taskBufferName)
     if listBufNum == -1                         " Has no list buffer
@@ -411,7 +416,7 @@ func! TaskList()
     let list = list + listEmergency
     let list = add(list, "p ==========================================================")
     let list = list + listPlanned
-    call OpenTaskList(list)
+    call TaskListOpen(list)
 endfunc
 
 func! TaskListUpdate()

@@ -41,7 +41,7 @@ endif
 
 if !hasmapto("<Plug>CalendarV")
   "nmap <unique> <Leader>cal <Plug>CalendarV " Mike change
-  nmap <unique> <Leader>ca <Plug>CalendarV
+  "nmap <unique> <Leader>ca <Plug>CalendarV
 endif
 "Mike remove
 "if !hasmapto("<Plug>CalendarH")
@@ -274,6 +274,7 @@ function! s:GtdReturnSelecteDate()
     let g:gtdCalendarSelectedDate = <SID>GtdCalendarGetCursorDate()
     "echo g:gtdCalendarSelectedDate
 
+    exe 'close'
     if exists("g:preBufNr") && g:preBufNr
         "echom 'in cal preBufNr: ' . g:preBufNr
         let wnr = bufwinnr(g:preBufNr)
