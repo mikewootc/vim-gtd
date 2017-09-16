@@ -292,7 +292,7 @@ func! TaskList()
 
 
         let allLines = readfile(bname)
-        if len(allLines) <= 0
+        if len(allLines) <= 0 " Empty file
             let bnr = bnr + 1
             continue
         endif
@@ -301,24 +301,30 @@ func! TaskList()
         let preOTaskStack = []
         let preETaskStack = []
         let prePTaskStack = []
-        for line in allLines
+"        for line in allLines
+        let i = 0
+        while i < len(allLines)
+            let line = allLines[i]
             let taskLevel = GetTaskLevel(line)
             if taskLevel < 0 " Empty line
+                let i += 1
                 continue
             endif
 
+            let taskLine = line . '  <' . bname . ':' . (i + 1) . '>'
             let stackLen = len(curTaskStack)
-            if taskLevel > stackLen
-                call add(curTaskStack, line)
-            elseif taskLevel == stackLen
-                let curTaskStack[stackLen - 1] = line
-            elseif taskLevel < stackLen
+            if taskLevel > stackLen                 " sub-level
+                call add(curTaskStack, taskLine)
+            elseif taskLevel == stackLen            " same-level
+                let curTaskStack[stackLen - 1] = taskLine
+            elseif taskLevel < stackLen             " parent-level
                 call remove(curTaskStack, taskLevel - 1, stackLen - 1)
-                call add(curTaskStack, line)
+                call add(curTaskStack, taskLine)
             endif
 
             let finished = GetDate(line, "f")
             if finished
+                let i += 1
                 continue
             endif
 
@@ -339,7 +345,9 @@ func! TaskList()
                 call TaskListAddTask(listPlanned, curTaskStack, prePTaskStack)
                 let prePTaskStack = copy(curTaskStack)
             endif
-        endfor
+"        endfor
+        let i += 1
+        endwhile
 
         let bnr = bnr + 1
     endw
@@ -376,17 +384,17 @@ func! GetTaskLine()
     let taskLine = getline(".")
     let taskLine = substitute(taskLine, '^\s*\[.\] *', "", "")
     let taskLine = substitute(taskLine, '\s*\[.:\d\{4}-\d\{2}-\d\{2}\]', "", "")
+    let taskLine = substitute(taskLine, '<.*:\d\+>', "", "")
     let taskLine = "'" . taskLine . " 明天'"
     return taskLine
 endfunc
-autocmd FileType gtd nnoremap <buffer> <leader>gs :!tt <c-r>=GetTaskLine()<cr>
 " personal }}}
 
 
 " Commands =====================================================================
 command! ToggleFold         call ToggleFold()
 command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
-command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
+command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + b:dateWidth)
 command! CheckOverdue       call CheckOverdue()
 command! TaskList           call TaskList()
 command! AlignDate          call AlignDate()
