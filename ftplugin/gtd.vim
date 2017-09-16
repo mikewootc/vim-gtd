@@ -13,6 +13,10 @@ if !exists("g:task_list_with_parents")
     let g:task_list_with_parents = 1
 endif
 
+if !exists("g:gtd_auto_update_tasklist")
+    let g:gtd_auto_update_tasklist = 1
+endif
+
 if !exists("g:gtd_emergency_days")
     let g:gtd_emergency_days = 7
 endif
@@ -347,7 +351,7 @@ func! TaskList()
             endif
 "        endfor
         let i += 1
-        endwhile
+        endw
 
         let bnr = bnr + 1
     endw
@@ -360,6 +364,18 @@ func! TaskList()
     let list = add(list, "p ==========================================================")
     let list = list + listPlanned
     call OpenTaskList(list)
+endfunc
+
+func! TaskListUpdate()
+    let i = 1
+    while i <= winnr('$')
+        let i += 1
+        let bnr = winbufnr(i)
+        let wname = bufname(bnr)
+        if wname == g:taskBufferName
+            call TaskList()
+        endif
+    endw
 endfunc
 
 function! TaskListBufInit()
@@ -394,17 +410,18 @@ endfunc
 " Commands =====================================================================
 command! ToggleFold         call ToggleFold()
 command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
-command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + b:dateWidth)
+command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
 command! CheckOverdue       call CheckOverdue()
 command! TaskList           call TaskList()
 command! AlignDate          call AlignDate()
 
-autocmd BufEnter __gtd_task_list__ call TaskListBufInit()
-autocmd BufEnter *.gtd  call GtdBufInit()
-autocmd BufEnter *.gtdt call GtdBufInit()
-
+autocmd BufEnter        __gtd_task_list__   call TaskListBufInit()
+autocmd BufEnter        *.gtd,*.gtdt        call GtdBufInit()
+if g:gtd_auto_update_tasklist
+autocmd BufWritePost    *.gtd,*.gtdt        call TaskListUpdate()
+endif
 if g:gtd_auto_check_overdue
-    autocmd BufEnter *.gtd silent! call CheckOverdue()
+autocmd BufEnter        *.gtd silent!       call CheckOverdue()
 endif
 
 " Setting ======================================================================

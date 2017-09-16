@@ -12,11 +12,8 @@ runtime! ftplugin/gtd.vim
 
 func! GotoTaskDefinition()
     let line = getline(".")
-    "echo "line" line
     let loc = matchstr(line, '\(<l:\)\@<=.*:\d\+>\@=')
-    "echo "loc" loc
     let locPair = split(loc, ':')
-    "echo locPair
     let file = locPair[0]
     let line = locPair[1]
 
