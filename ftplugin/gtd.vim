@@ -311,7 +311,7 @@ func! TaskList()
                 continue
             endif
 
-            let taskLine = line . '  <' . bname . ':' . (i + 1) . '>'
+            let taskLine = line . '  <l:' . bname . ':' . (i + 1) . '>'
             let stackLen = len(curTaskStack)
             if taskLevel > stackLen                 " sub-level
                 call add(curTaskStack, taskLine)

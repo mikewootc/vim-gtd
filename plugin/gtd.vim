@@ -21,6 +21,7 @@ autocmd FileType gtd nnoremap <buffer> <silent> <leader>gf :AddDateFinish<cr>
 autocmd FileType gtd nnoremap <buffer> <silent> <leader>gc :CheckOverdue<cr>
 autocmd FileType gtd nnoremap <buffer> <silent> <leader>gt :TaskList<cr>
 autocmd FileType gtd,gtt nnoremap <buffer> <leader>gs :!tt <c-r>=GetTaskLine()<cr>|"personal
+autocmd FileType gtt nnoremap <buffer> <cr> :call GotoTaskDefinition()<cr>
 
 autocmd FileType gtd inoremap <buffer> [] [ ] 
 
