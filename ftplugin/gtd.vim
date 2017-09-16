@@ -112,6 +112,7 @@ func! IsCursorOnDate()
     let &iskeyword = keywordBak
 
     if match(word, '\a:\d\{4}-\d\{2}-\d\{2}') >= 0
+        echom "is on date"
         let ret = extend([1], split(word, ':'))
         return ret
     else
@@ -125,25 +126,27 @@ function! SelectDate()
         "echom "is on date"
         let g:preBufNr = bufnr('%')
         "echom 'in gtd preBufNr: ' . g:preBufNr
-        call Calendar(0)
+        call GtdCalendar(0)
     endif
 endfunc
 
 function! SelectDateAfter()
+    echom "SelectDateAfter"
     let ret = IsCursorOnDate()
-    if ret[0] == 1 && exists("g:calendarSelectedDate")
-        let year    = g:calendarSelectedDate[0]
-        let month   = g:calendarSelectedDate[1]
+    if ret[0] == 1 && exists("g:gtdCalendarSelectedDate")
+        let year    = g:gtdCalendarSelectedDate[0]
+        let month   = g:gtdCalendarSelectedDate[1]
         if month < 10
             let month = '0' . month
         endif
-        let day     = g:calendarSelectedDate[2]
+        let day     = g:gtdCalendarSelectedDate[2]
         if day < 10
             let day = '0' . day
         endif
         let dateString = year . "-" . month . "-" . day
 
         let line = getline(".")
+        echom line
         let newLine = substitute(line, '\[' . ret[1] . ':' . '\d\{4}-\d\{2}-\d\{2}' . '\]', '\[' . ret[1] . ':' . dateString . '\]', '')
         call setline(".", newLine)
     endif
@@ -460,16 +463,16 @@ command! CheckOverdue       call CheckOverdue()
 command! TaskList           call TaskList()
 command! AlignDate          call AlignDate()
 
-autocmd BufEnter        __gtd_task_list__   call TaskListBufInit()
-autocmd BufEnter        *.gtd,*.gtdt        call GtdBufInit()
+autocmd BufEnter        __gtd_task_list__       call TaskListBufInit()
+autocmd BufEnter        *.gtd,*.gtdt            call GtdBufInit()
 if g:gtd_pickup_date_from_calendar
-autocmd BufEnter        *.gtd,*.gtdt        call SelectDateAfter()
+autocmd BufEnter        *.gtd,*.gtdt silent!    call SelectDateAfter()
 endif
 if g:gtd_auto_update_tasklist
-autocmd BufWritePost    *.gtd,*.gtdt        call TaskListUpdate()
+autocmd BufWritePost    *.gtd,*.gtdt            call TaskListUpdate()
 endif
 if g:gtd_auto_check_overdue
-autocmd BufEnter        *.gtd silent!       call CheckOverdue()
+autocmd BufEnter        *.gtd silent!           call CheckOverdue()
 endif
 
 " Setting ======================================================================
