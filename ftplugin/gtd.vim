@@ -77,6 +77,9 @@ EOF
 func! GetVirtCol(pat)
     let line = getline(".")
     let theMatch = match(line, a:pat)
+    if theMatch < 0
+        return theMatch
+    endif
     let cursorBak = getcurpos()
     call cursor(".", theMatch)
     let theVirtCol = virtcol(".")
@@ -481,6 +484,13 @@ autocmd BufEnter        *.gtd silent!           call CheckOverdue()
 endif
 
 " Setting ======================================================================
+
+" t Auto-wrap text using textwidth
+" c Auto-wrap comments using textwidth, inserting the current comment
+" r Automatically insert the current comment leader after hitting <Enter> in Insert mode.
+" o Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode.
+" q Allow formatting of comments with "gq".
+" l Long lines are not broken in insert mode: When a line was longer than 'textwidth' when the insert command started, Vim does not automatically format it.
 setlocal fo-=t fo-=c fo+=roql
 setlocal comments=://
 
