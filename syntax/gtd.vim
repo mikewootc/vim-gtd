@@ -27,15 +27,17 @@ syn region  gtdOverdueDate start=/\[o:/ end=/\]/ oneline
 " ----------------------------------------
 " Normal Task(planned)
 syn match   gtdPlannedSteps "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
-"syn match   gtdPlannedSteps "^\s*\[\*\] " nextgroup=gtdPlanDate
+"syn match   gtdPlannedSteps "\* *\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Emergency Task
 syn match   gtdEmergencySteps "[^\]]*\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdEmergencySteps "\* *\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Overdue Task
 syn match   gtdOverdueSteps "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdOverdueSteps "\* *\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " High prio Task
@@ -47,7 +49,7 @@ syn match   gtdLowPrioSteps "^\s*\[\.\] " contains=ALL
 
 " ----------------------------------------
 " Substeps
-syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker,gtdEmergencySteps,gtdPlannedSteps,gtdOverdueSteps
 
 " ----------------------------------------
 " Finished
