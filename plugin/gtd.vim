@@ -14,6 +14,7 @@ func! OpenGtd()
 endfunc
 
 autocmd BufRead,BufNewFile *.gtd         setf gtd
+autocmd BufRead,BufNewFile *.gtl         setf gtl
 
 " Commands =====================================================================
 command! -nargs=0 Gtdo :call OpenGtd()

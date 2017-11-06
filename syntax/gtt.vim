@@ -1,4 +1,4 @@
-" Gtd task syntax
+" Gtd log syntax
 
 if exists("b:current_syntax")
   finish

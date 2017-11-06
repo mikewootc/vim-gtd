@@ -425,12 +425,12 @@ endfunc
 func! TaskListUpdate()
     let i = 1
     while i <= winnr('$')
-        let i += 1
         let bnr = winbufnr(i)
         let wname = bufname(bnr)
         if wname == g:taskBufferName
             call TaskList()
         endif
+        let i += 1
     endw
 endfunc
 
@@ -481,6 +481,7 @@ autocmd BufWritePost    *.gtd,*.gtdt            call TaskListUpdate()
 endif
 if g:gtd_auto_check_overdue
 autocmd BufEnter        *.gtd silent!           call CheckOverdue()
+autocmd BufWritePre     *.gtd silent!           call CheckOverdue()
 endif
 
 " Setting ======================================================================
