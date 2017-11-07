@@ -18,7 +18,7 @@ func! GotoTaskDefinition()
     let line = locPair[1]
 
     wincmd j
-    exec 'vi' . file
+    exec 'vi ' . file
     exec 'normal ' line . 'gg'
 endfunc
 
