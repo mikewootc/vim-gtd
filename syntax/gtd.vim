@@ -3,7 +3,6 @@ if exists("b:current_syntax")
   finish
 endif
 
-
 " ----------------------------------------
 " Separator line
 syn match   gtdSeparator ".*=\{40}=.*"
@@ -18,43 +17,47 @@ syn match   gtdDate "[0-9]\{4}\-[0-9]\{2}\-[0-9]\{2}"
 
 " ----------------------------------------
 " Plan date
-syn region  gtdPlanDate start=/\[p:/ end=/\]/ oneline contains=gtdDate
+"syn region  gtdPlanDate start=/\[p:/ end=/\]/ oneline contains=gtdDate
 
 " ----------------------------------------
 " Overdue date
 syn region  gtdOverdueDate start=/\[o:/ end=/\]/ oneline
 
 " ----------------------------------------
-" Normal Task(planned)
-syn match   gtdPlannedSteps "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
-"syn match   gtdPlannedSteps "\* *\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+" Normal(planned)
+syn match   gtdPlanned "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdPlanned "^\s*\[\*\] " nextgroup=gtdPlanDate
 
 " ----------------------------------------
-" Emergency Task
-syn match   gtdEmergencySteps "[^\]]*\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
-"syn match   gtdEmergencySteps "\* *\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+" Today
+"syn match   gtdToday "[^\]]*\[t:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
-" Overdue Task
-syn match   gtdOverdueSteps "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
-"syn match   gtdOverdueSteps "\* *\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+" Emergency
+syn match   gtdEmergency "[^\]]*\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdEmergency "^\s*\* .\+\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
-" High prio Task
-syn match   gtdHighPrioSteps "^\s*\[\*\] " contains=ALL
-
-" ----------------------------------------
-" Low prio Task
-syn match   gtdLowPrioSteps "^\s*\[\.\] " contains=ALL
-
-" ----------------------------------------
-" Substeps
-syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker,gtdEmergencySteps,gtdPlannedSteps,gtdOverdueSteps
+" Overdue
+syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+"syn match   gtdOverdue "\* *\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Finished
-"syn match   gtdFinished '.\+\(\[f:\)\@='
 syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate
+"syn match   gtdFinished '.\+\(\[f:\)\@='
+
+" ----------------------------------------
+" High prio project
+syn match   gtdHighPrio "^\s*\[\*\] " contains=ALL
+
+" ----------------------------------------
+" Low prio project
+syn match   gtdLowPrio "^\s*\[\.\] " contains=ALL
+
+" ----------------------------------------
+" Substeps
+"syn match   gtdSubstep "^\s*\*.\+" contains=gtdDate,gtdContext,gtdWorker,gtdEmergency,gtdPlanned,gtdOverdue
 
 " ----------------------------------------
 " Context
@@ -89,14 +92,15 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdSeparator            Special
     hi  link    gtdDate                 String
     hi  link    gtdOverdueDate          hl_red
-    hi  link    gtdPlanDate             hl_magenta
+"    hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
-    hi  link    gtdPlannedSteps         hl_blue
-    hi  link    gtdEmergencySteps       hl_yellow
-    hi  link    gtdOverdueSteps         hl_red
-    hi  link    gtdHighPrioSteps        hl_orange_l
-    hi  link    gtdLowPrioSteps         Comment
-    hi  link    gtdSubstep              PreProc
+    hi  link    gtdPlanned              hl_blue
+"    hi  link    gtdToday                hl_yellow_l
+    hi  link    gtdEmergency            hl_yellow
+    hi  link    gtdOverdue              hl_red
+    hi  link    gtdHighPrio             hl_orange_l
+    hi  link    gtdLowPrio              Comment
+"    hi  link    gtdSubstep              PreProc
     hi  link    gtdFinished             hl_green_d
     hi  link    gtdContext              hl_cyan
     hi  link    gtdWorker               hl_brown
@@ -108,14 +112,15 @@ else
     hi          gtdSeparator            ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdDate                 ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdOverdueDate          ctermfg=DarkRed         guifg=DarkRed
-    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
+"    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
-    hi          gtdPlannedSteps         ctermfg=Cyan            guifg=Cyan
-    hi          gtdEmergencySteps       ctermfg=DarkYellow      guifg=DarkYellow
-    hi          gtdOverdueSteps         ctermfg=DarkRed         guifg=DarkRed
-    hi          gtdHighPrioSteps        ctermfg=DarkYellow      guifg=DarkYellow
-    hi          gtdLowPrioSteps         ctermfg=DarkGray        guifg=DarkGray
-    hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
+    hi          gtdPlanned              ctermfg=Cyan            guifg=Cyan
+"    hi          gtdToday                ctermfg=Yellow          guifg=Yellow
+    hi          gtdEmergency            ctermfg=DarkYellow      guifg=DarkYellow
+    hi          gtdOverdue              ctermfg=DarkRed         guifg=DarkRed
+    hi          gtdHighPrio             ctermfg=DarkYellow      guifg=DarkYellow
+    hi          gtdLowPrio              ctermfg=DarkGray        guifg=DarkGray
+"    hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
     hi          gtdContext              ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdWorker               ctermfg=Blue            guifg=Blue

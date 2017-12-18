@@ -24,8 +24,8 @@ autocmd FileType gtd        nnoremap <buffer>           <TAB>       :ToggleFold<
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gp  :AddDatePlan<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gf  :AddDateFinish<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gc  :CheckOverdue<cr>
-autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gt  :TaskList<cr>
-autocmd FileType gtd,gtt    nnoremap <buffer>           <leader>gs  :!tt <c-r>=GetTaskLine()<cr>|"personal
+autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gt  :SchedList<cr>
+autocmd FileType gtd,gtt    nnoremap <buffer>           <leader>gs  :!tt <c-r>=GetTodoLine()<cr>|"personal
 if g:gtd_pickup_date_from_calendar
 autocmd FileType gtd        nnoremap <buffer> <silent>  <cr>        :call SelectDate()<cr>
 endif

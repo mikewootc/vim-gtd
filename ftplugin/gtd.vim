@@ -9,12 +9,12 @@ if !exists("g:gtd_check_overdue_auto_save")
     let g:gtd_check_overdue_auto_save = 0
 endif
 
-if !exists("g:task_list_with_parents")
-    let g:task_list_with_parents = 1
+if !exists("g:sched_list_with_parents")
+    let g:sched_list_with_parents = 1
 endif
 
-if !exists("g:gtd_auto_update_tasklist")
-    let g:gtd_auto_update_tasklist = 1
+if !exists("g:gtd_auto_update_sched_list")
+    let g:gtd_auto_update_sched_list = 1
 endif
 
 if !exists("g:gtd_emergency_days")
@@ -29,7 +29,7 @@ if !exists("g:gtd_align_date_when_exit_insert")
     let g:gtd_align_date_when_exit_insert = 1
 endif
 
-let g:taskBufferName = "__gtd_task_list__"
+let g:schedBufferName = "__gtd_sched_list__"
 let g:dateWidth = 14
 
 
@@ -210,7 +210,7 @@ func! AlignDate()
     call AlignSpeciDate('f',     g:gtd_date_align_col + g:dateWidth)
 endfunc
 
-" Check if the tasks if overdued or emergency.
+" Check if the todos if overdued or emergency.
 " This function would go through the whole content of current buffer.
 func! CheckOverdue()
     let totalLines = line('$')
@@ -255,10 +255,10 @@ func! CheckOverdue()
     endif
 endfunc
 
-" Get the task indent level, count from 1. calc by: (line_indents space / &tabstop)
+" Get the todo indent level, count from 1. calc by: (line_indents space / &tabstop)
 " line  : text string of line.
 " return: indent level.
-func! GetTaskLevel(line)
+func! GetTodoLevel(line)
     let step = &tabstop
     let indents = match(a:line, "\\S")
 
@@ -268,52 +268,52 @@ func! GetTaskLevel(line)
     return (indents / step) + 1
 endfunc
 
-" Add task in: curTaskStack into list: taskList.
-" This function is order to add tasks into list with its ancestors.
-" taskList    : task list
-" curTaskStack: task to add
-" preTaskStack: previously added task
+" Add sched in: curSchedStack into list: schedList.
+" This function is order to add scheds into list with its ancestors.
+" schedList    : sched list
+" curSchedStack: sched to add
+" preSchedStack: previously added sched
 " e.g. If the context is:
-"   [ ] GrandpaTask
-"       [ ] FatherTask
-"           [ ] CousinTask
-"           [ ] CurrentTaskToAdd
-" then: curTaskStack = ['[ ] GrandpaTask', '[ ] FatherTask', '[ ] CurrentTaskToAdd']
-"       preTaskStack = ['[ ] GrandpaTask', '[ ] FatherTask', '[ ] CousinTask']
-func! TaskListAddTask(taskList, curTaskStack, preTaskStack)
-    if g:task_list_with_parents
-        let curTaskStackLen = len(a:curTaskStack)
-        let preTaskStackLen = len(a:preTaskStack)
+"   [ ] GrandpaSched
+"       [ ] FatherSched
+"           [ ] CousinSched
+"           [ ] CurrentSchedToAdd
+" then: curSchedStack = ['[ ] GrandpaSched', '[ ] FatherSched', '[ ] CurrentSchedToAdd']
+"       preSchedStack = ['[ ] GrandpaSched', '[ ] FatherSched', '[ ] CousinSched']
+func! SchedListAdd(schedList, curSchedStack, preSchedStack)
+    if g:sched_list_with_parents
+        let curSchedStackLen = len(a:curSchedStack)
+        let preSchedStackLen = len(a:preSchedStack)
         let i = 0
-        while i < curTaskStackLen
-            if i < preTaskStackLen && a:curTaskStack[i] == a:preTaskStack[i]
+        while i < curSchedStackLen
+            if i < preSchedStackLen && a:curSchedStack[i] == a:preSchedStack[i]
                 let i = i + 1
                 continue
             endif
 
-            call add(a:taskList, a:curTaskStack[i])
+            call add(a:schedList, a:curSchedStack[i])
             let i = i + 1
         endw
     else
-        call add(a:taskList, a:curTaskStack[len(a:curTaskStack)-1])
+        call add(a:schedList, a:curSchedStack[len(a:curSchedStack)-1])
     endif
 endfunc
 
-" Open a window to show task list.
-" list  : the task lines to show. Each item of the list is a text line.
+" Open a window to show sched list.
+" list  : the sched lines to show. Each item of the list is a text line.
 " return: none
-func! TaskListOpen(list)
+func! SchedListOpen(list)
     " Open list buffer
-    let listBufNum = bufnr(g:taskBufferName)
+    let listBufNum = bufnr(g:schedBufferName)
     if listBufNum == -1                         " Has no list buffer
-        exe "split " . g:taskBufferName
+        exe "split " . g:schedBufferName
     else                                        " Already has buffer
         let listWinNum = bufwinnr(listBufNum)
-        if listWinNum != -1                     " Has task list win ...
+        if listWinNum != -1                     " Has sched list win ...
             if winnr() != listWinNum            " ... but but current win, then jump to it.
                 exe listWinNum . "wincmd w"
             endif
-        else                                    " Has no task win, then open it by split.
+        else                                    " Has no sched win, then open it by split.
             exe "split +buffer" . listBufNum
         endif
     endif
@@ -329,8 +329,8 @@ func! TaskListOpen(list)
 endfunc
 
 " This function will go through all buffers to find 'gtd' file, and extract
-" all tasks which are planned, and then show them in a splited window.
-func! TaskList()
+" all scheds which are planned, and then show them in a splited window.
+func! SchedList()
     let listEmergency       = []
     let listOverdue         = []
     let listPlanned         = []
@@ -345,7 +345,7 @@ func! TaskList()
             continue
         endif
 
-        if bname == g:taskBufferName
+        if bname == g:schedBufferName
             let bnr = bnr + 1
             continue
         endif
@@ -357,29 +357,29 @@ func! TaskList()
             continue
         endif
 
-        let curTaskStack = []
-        let preOTaskStack = []
-        let preETaskStack = []
-        let prePTaskStack = []
+        let curSchedStack = []
+        let preOSchedStack = []
+        let preESchedStack = []
+        let prePSchedStack = []
 "        for line in allLines
         let i = 0
         while i < len(allLines)
             let line = allLines[i]
-            let taskLevel = GetTaskLevel(line)
-            if taskLevel < 0 " Empty line
+            let schedLevel = GetTodoLevel(line)
+            if schedLevel < 0 " Empty line
                 let i += 1
                 continue
             endif
 
-            let taskLine = line . '  <l:' . bname . ':' . (i + 1) . '>'
-            let stackLen = len(curTaskStack)
-            if taskLevel > stackLen                 " sub-level
-                call add(curTaskStack, taskLine)
-            elseif taskLevel == stackLen            " same-level
-                let curTaskStack[stackLen - 1] = taskLine
-            elseif taskLevel < stackLen             " parent-level
-                call remove(curTaskStack, taskLevel - 1, stackLen - 1)
-                call add(curTaskStack, taskLine)
+            let schedLine = line . '  <l:' . bname . ':' . (i + 1) . '>'
+            let stackLen = len(curSchedStack)
+            if schedLevel > stackLen                 " sub-level
+                call add(curSchedStack, schedLine)
+            elseif schedLevel == stackLen            " same-level
+                let curSchedStack[stackLen - 1] = schedLine
+            elseif schedLevel < stackLen             " parent-level
+                call remove(curSchedStack, schedLevel - 1, stackLen - 1)
+                call add(curSchedStack, schedLine)
             endif
 
             let finished = GetDate(line, "f")
@@ -390,20 +390,20 @@ func! TaskList()
 
             let overdueDate = GetDate(line, "o")
             if overdueDate
-                call TaskListAddTask(listOverdue, curTaskStack, preOTaskStack)
-                let preOTaskStack = copy(curTaskStack)
+                call SchedListAdd(listOverdue, curSchedStack, preOSchedStack)
+                let preOSchedStack = copy(curSchedStack)
             endif
 
             let emergencyDate = GetDate(line, "e")
             if emergencyDate
-                call TaskListAddTask(listEmergency, curTaskStack, preETaskStack)
-                let preETaskStack = copy(curTaskStack)
+                call SchedListAdd(listEmergency, curSchedStack, preESchedStack)
+                let preESchedStack = copy(curSchedStack)
             endif
 
             let plannedDate = GetDate(line, "p")
             if plannedDate
-                call TaskListAddTask(listPlanned, curTaskStack, prePTaskStack)
-                let prePTaskStack = copy(curTaskStack)
+                call SchedListAdd(listPlanned, curSchedStack, prePSchedStack)
+                let prePSchedStack = copy(curSchedStack)
             endif
 "        endfor
         let i += 1
@@ -419,22 +419,22 @@ func! TaskList()
     let list = list + listEmergency
     let list = add(list, "p ==========================================================")
     let list = list + listPlanned
-    call TaskListOpen(list)
+    call SchedListOpen(list)
 endfunc
 
-func! TaskListUpdate()
+func! SchedListUpdate()
     let i = 1
     while i <= winnr('$')
         let bnr = winbufnr(i)
         let wname = bufname(bnr)
-        if wname == g:taskBufferName
-            call TaskList()
+        if wname == g:schedBufferName
+            call SchedList()
         endif
         let i += 1
     endw
 endfunc
 
-function! TaskListBufInit()
+function! SchedListBufInit()
     setlocal filetype=gtt
     setlocal buftype=nofile
     setlocal bufhidden=hide
@@ -452,13 +452,13 @@ function! GtdBufInit()
 endfunc
 
 " personal {{{
-func! GetTaskLine()
-    let taskLine = getline(".")
-    let taskLine = substitute(taskLine, '^\s*\[.\] *', "", "")
-    let taskLine = substitute(taskLine, '\s*\[.:\d\{4}-\d\{2}-\d\{2}\]', "", "")
-    let taskLine = substitute(taskLine, '<.*:\d\+>', "", "")
-    let taskLine = "'" . taskLine . " 明天'"
-    return taskLine
+func! GetTodoLine()
+    let todoLine = getline(".")
+    let todoLine = substitute(todoLine, '^\s*\[.\] *', "", "")
+    let todoLine = substitute(todoLine, '\s*\[.:\d\{4}-\d\{2}-\d\{2}\]', "", "")
+    let todoLine = substitute(todoLine, '<.*:\d\+>', "", "")
+    let todoLine = "'" . todoLine . " 明天'"
+    return todoLine
 endfunc
 " personal }}}
 
@@ -468,16 +468,16 @@ command! ToggleFold         call ToggleFold()
 command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
 command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
 command! CheckOverdue       call CheckOverdue()
-command! TaskList           call TaskList()
+command! SchedList           call SchedList()
 command! AlignDate          call AlignDate()
 
-autocmd BufEnter        __gtd_task_list__       call TaskListBufInit()
+autocmd BufEnter        __gtd_sched_list__       call SchedListBufInit()
 autocmd BufEnter        *.gtd,*.gtdt            call GtdBufInit()
 if g:gtd_pickup_date_from_calendar
 autocmd BufEnter        *.gtd,*.gtdt silent!    call SelectDateAfter()
 endif
-if g:gtd_auto_update_tasklist
-autocmd BufWritePost    *.gtd,*.gtdt            call TaskListUpdate()
+if g:gtd_auto_update_sched_list
+autocmd BufWritePost    *.gtd,*.gtdt            call SchedListUpdate()
 endif
 if g:gtd_auto_check_overdue
 autocmd BufEnter        *.gtd silent!           call CheckOverdue()
