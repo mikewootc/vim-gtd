@@ -30,7 +30,7 @@ syn match   gtdPlanned "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Today
-"syn match   gtdToday "[^\]]*\[t:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdToday "[^\]]*\[t:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Emergency
@@ -95,7 +95,7 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
 "    hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
     hi  link    gtdPlanned              hl_blue
-"    hi  link    gtdToday                hl_yellow_l
+    hi  link    gtdToday                hl_orange
     hi  link    gtdEmergency            hl_yellow
     hi  link    gtdOverdue              hl_red
     hi  link    gtdHighPrio             hl_orange_l
@@ -115,7 +115,7 @@ else
 "    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlanned              ctermfg=Cyan            guifg=Cyan
-"    hi          gtdToday                ctermfg=Yellow          guifg=Yellow
+    hi          gtdToday                ctermfg=Yellow          guifg=Yellow
     hi          gtdEmergency            ctermfg=DarkYellow      guifg=DarkYellow
     hi          gtdOverdue              ctermfg=DarkRed         guifg=DarkRed
     hi          gtdHighPrio             ctermfg=DarkYellow      guifg=DarkYellow

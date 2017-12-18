@@ -10,7 +10,7 @@ let b:did_ftplugin = 1
 runtime! ftplugin/gtd.vim
 
 
-func! GotoTaskDefinition()
+func! GotoSchedDefinition()
     let line = getline(".")
     let loc = matchstr(line, '\(<l:\)\@<=.*:\d\+>\@=')
     let locPair = split(loc, ':')
@@ -22,6 +22,6 @@ func! GotoTaskDefinition()
     exec 'normal ' line . 'gg'
 endfunc
 
-"autocmd FileType gtt nnoremap <buffer> <cr> :call GotoTaskDefinition()<cr>
+"autocmd FileType gtt nnoremap <buffer> <cr> :call GotoSchedDefinition()<cr>
 
 
