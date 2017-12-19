@@ -57,16 +57,33 @@ import datetime, time, vim
 # startDate: string looks like: 20170827
 # endDate  : string looks like: 20170827
 # return   : date interval. And return value for vim is in b:pyRet.
-def DateDiffer(startDate, endDate):
+def PyDateDiffer(startDate, endDate):
     timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
     timeE = time.strptime(vim.eval(endDate),"%Y%m%d")
-    startDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
-    endDate   = datetime.datetime(timeE[0],timeE[1],timeE[2],timeE[3],timeE[4],timeE[5])
-    differ = (endDate - startDate).days
+    pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+    pyEndDate   = datetime.datetime(timeE[0],timeE[1],timeE[2],timeE[3],timeE[4],timeE[5])
+    differ = (pyEndDate - pyStartDate).days
 
     b = vim.current.buffer
     b.vars["pyRet"] = differ
     return differ
+
+def PyDateAdd(startDate, addDays, outFormat):
+    timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
+    pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+    delta = datetime.timedelta(days=addDays)
+    toDate = pyStartDate + delta
+
+    b = vim.current.buffer
+    if outFormat == '%Y-%m-%d':
+        ret = toDate.strftime('%Y-%m-%d')
+        print ret
+        b.vars["pyRet"] = ret
+    else:
+        ret = toDate.strftime('%Y%m%d')
+        print ret
+        b.vars["pyRet"] = ret
+    #b.vars["pyRet"] = differ
 EOF
 
 " ------------------------------------------------------------------------------
@@ -199,6 +216,20 @@ func! AddDate(dateType, colNum)
     call setline(".", newLine)
 endfunc
 
+func! FinishRepeatedTask()
+    let line = getline(".")
+    let planDate = GetDate(line, "[peto]")
+    python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    "echom 'new date' b:pyRet
+
+    let newLine = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " Calc new date
+    "echom "newLine" newLine
+    exec "normal yy"
+    call AddDate("f", g:gtd_date_align_col + g:dateWidth)
+    exec "normal p"
+    call setline(".", newLine)
+endfunc
+
 " Align specified date
 func! AlignSpeciDate(dateType, colNum)
     let line = getline(".")
@@ -262,7 +293,7 @@ func! CheckOverdue()
                     "endif
                     call ChangePlannedTag(line, 'o', i)
                 else
-                    python DateDiffer(vim.eval("today"), vim.eval("planDate"))
+                    python PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
                     echom b:pyRet
                     if b:pyRet == 0                         " today
                         call ChangePlannedTag(line, 't', i)
@@ -597,6 +628,7 @@ endfunc
 command! ToggleFold         call ToggleFold()
 command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
 command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
+command! FinishRepeatedTask call FinishRepeatedTask()
 command! CheckOverdue       call CheckOverdue()
 command! SchedList          call SchedList()
 command! TaskList           call TaskList()
