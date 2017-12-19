@@ -254,7 +254,7 @@ func! AlignSpeciDate(dateType, colNum)
 endfunc
 
 func! AlignDate()
-    call AlignSpeciDate('[poe]', g:gtd_date_align_col)
+    call AlignSpeciDate('[peto]', g:gtd_date_align_col)
     call AlignSpeciDate('f',     g:gtd_date_align_col + g:dateWidth)
 endfunc
 
