@@ -91,13 +91,13 @@ syn match   gtdBrace "}}}\d*"
 if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdSeparator            Special
     hi  link    gtdDate                 String
-    hi  link    gtdOverdueDate          hl_red
+    hi  link    gtdOverdueDate          hl_red_l
 "    hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
     hi  link    gtdPlanned              hl_blue
     hi  link    gtdToday                hl_orange
     hi  link    gtdEmergency            hl_yellow
-    hi  link    gtdOverdue              hl_red
+    hi  link    gtdOverdue              hl_red_l
     hi  link    gtdHighPrio             hl_orange_l
     hi  link    gtdLowPrio              Comment
 "    hi  link    gtdSubstep              PreProc

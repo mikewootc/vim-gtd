@@ -90,7 +90,7 @@ EOF
 " Main stuff
 " ------------------------------------------------------------------------------
 
-" Get virtcol of pat in cursor-line.
+" Get virtcol of pat in cursor-line. Count from 1.
 func! GetVirtCol(pat)
     let line = getline(".")
     let theMatch = match(line, a:pat)
@@ -98,9 +98,10 @@ func! GetVirtCol(pat)
         return theMatch
     endif
     let cursorBak = getcurpos()
-    call cursor(".", theMatch)
+    call cursor(".", theMatch + 1) " theMatch count from 0, but the curpos count from 1, so +1.
     let theVirtCol = virtcol(".")
     call cursor(cursorBak[1], cursorBak[2])
+    "echom theMatch theVirtCol
     return theVirtCol
 endfunc
 
@@ -234,18 +235,18 @@ endfunc
 func! AlignSpeciDate(dateType, colNum)
     let line = getline(".")
     let planDateCol = GetVirtCol('\[' . a:dateType . ':')
-    if planDateCol > 0
+    if planDateCol > 0                  " Has plan date
         if planDateCol > a:colNum       " Should move left
             let leftSpaceCol = GetVirtCol(' \+\[' . a:dateType . ':')
             if leftSpaceCol < planDateCol " Could move
-                let couldMove  = planDateCol - leftSpaceCol - 1
-                let shouldMove = planDateCol - a:colNum + 1
+                let couldMove  = planDateCol - leftSpaceCol
+                let shouldMove = planDateCol - a:colNum
                 let shouldMove = couldMove >= shouldMove ? shouldMove : couldMove
                 let newLine = substitute(line, repeat(" ", shouldMove) . '\(\[' . a:dateType . '\)', '\1', '')
                 call setline(".", newLine)
             endif
         elseif planDateCol < a:colNum   " Should move right
-            let shouldMove = a:colNum - planDateCol - 1
+            let shouldMove = a:colNum - planDateCol
             let newLine = substitute(line, '\(\[' . a:dateType . '\)', repeat(" ", shouldMove) . '\1', '')
             call setline(".", newLine)
         endif
