@@ -186,6 +186,7 @@ function! SelectDateAfter()
         echom line
         let newLine = substitute(line, '\[' . ret[1] . ':' . '\d\{4}-\d\{2}-\d\{2}' . '\]', '\[' . ret[1] . ':' . dateString . '\]', '')
         call setline(".", newLine)
+        unlet g:gtdCalendarSelectedDate
     endif
 endfunc
 
