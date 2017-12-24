@@ -232,6 +232,15 @@ func! FinishRepeatedTask()
     call setline(".", newLine)
 endfunc
 
+func! FinishTodo()
+    let line = getline(".")
+    if match(line, '<r:\d.\+>') > 0
+        call FinishRepeatedTask()
+    else
+        call AddDate("f", g:gtd_date_align_col + g:dateWidth)
+    endif
+endfunc
+
 " Align specified date
 func! AlignSpeciDate(dateType, colNum)
     let line = getline(".")
@@ -629,8 +638,8 @@ endfunc
 " Commands =====================================================================
 command! ToggleFold         call ToggleFold()
 command! AddDatePlan        call AddDate("p", g:gtd_date_align_col)
-command! AddDateFinish      call AddDate("f", g:gtd_date_align_col + g:dateWidth)
-command! FinishRepeatedTask call FinishRepeatedTask()
+command! FinishTodo         call FinishTodo()
+"command! FinishRepeatedTask call FinishRepeatedTask()
 command! CheckOverdue       call CheckOverdue()
 command! SchedList          call SchedList()
 command! TaskList           call TaskList()
