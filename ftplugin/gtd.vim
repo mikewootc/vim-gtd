@@ -274,7 +274,7 @@ endfunc
 " toTag: p/e/t/o
 " setLineNum: >0: set changed line to setLineNum of current-buffer. ==0: doesn't set buffer.
 func! ChangePlannedTag(line, toTag, setLineNum)
-    if match(a:line, '\[[peto]:') > 0 && match(line, '\[' . a:toTag . ':') < 0  
+    if match(a:line, '\[[peto]:') > 0 && match(a:line, '\[' . a:toTag . ':') < 0  
         let repl = substitute(a:line, '\[[peto]:', '[' . a:toTag . ':', "")
         if a:setLineNum > 0
             call setline(a:setLineNum, repl)
