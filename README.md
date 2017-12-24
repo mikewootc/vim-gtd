@@ -13,6 +13,16 @@ Tasklist overview:
 
 ![tasklist overview](./test/tasklist.png)
 
+## Features
+
+* Manage projects(subprojects) and task.
+* Add planned (due) date and finished date(default today) by keyboard shortcuts, and can be seleted from calendar.
+* Color highlight for planned / emergency / overdued TODOs.
+* Specify workers by @Somebody mark.
+* Specify context by #Somewhere# mark
+* Support priorities for TODOs.
+* Support repeated tasks.
+
 ## Usage
 
 The easiest way to get started is playing around with the example file gtd/test/t.gtdt. And with key mapping:
