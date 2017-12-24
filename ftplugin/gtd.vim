@@ -147,7 +147,7 @@ func! IsCursorOnDate()
 endfunc
 
 " Return: project, task, comment, ...
-func GetLineType(line)
+func! GetLineType(line)
     if match(a:line, '^\s*\* ') >= 0
         return 'task'
     elseif match(a:line, '^\s*\[.\] ') >= 0
@@ -157,7 +157,7 @@ func GetLineType(line)
     endif
 endfunc
 
-function! SelectDate()
+func! SelectDate()
     let ret = IsCursorOnDate()
     if ret[0] == 1
         "echom "is on date"
@@ -167,7 +167,7 @@ function! SelectDate()
     endif
 endfunc
 
-function! SelectDateAfter()
+func! SelectDateAfter()
     echom "SelectDateAfter"
     let ret = IsCursorOnDate()
     if ret[0] == 1 && exists("g:gtdCalendarSelectedDate")
@@ -606,7 +606,7 @@ func! TaskListUpdate()
     endwhile
 endfunc
 
-function! SchedListBufInit()
+func! SchedListBufInit()
     setlocal filetype=gtt
     setlocal buftype=nofile
     setlocal bufhidden=hide
@@ -617,7 +617,7 @@ function! SchedListBufInit()
     setlocal textwidth=0
 endfunc
 
-function! GtdBufInit()
+func! GtdBufInit()
     setlocal foldmethod=marker
     setlocal expandtab
     let b:fold_status=0
