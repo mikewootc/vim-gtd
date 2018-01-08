@@ -19,32 +19,38 @@ syn match   gtdDate "[0-9]\{4}\-[0-9]\{2}\-[0-9]\{2}"
 " Plan date
 "syn region  gtdPlanDate start=/\[p:/ end=/\]/ oneline contains=gtdDate
 
+" ---------------------------------------- 
+" Daily
+syn match   gtdDaily "<d\d:->"
+syn match   gtdDailyFinished "<d\d:v>"
+syn match   gtdDailyFailed "<d\d:x>"
+
 " ----------------------------------------
 " Overdue date
 syn region  gtdOverdueDate start=/\[o:/ end=/\]/ oneline
 
 " ----------------------------------------
 " Normal(planned)
-syn match   gtdPlanned "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdPlanned "[^\]]*\[p:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,gtdDaily,gtdDailyFinished,gtdDailyFailed
 "syn match   gtdPlanned "^\s*\[\*\] " nextgroup=gtdPlanDate
 
 " ----------------------------------------
 " Today
-syn match   gtdToday "[^\]]*\[t:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdToday "[^\]]*\[t:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,gtdDaily,gtdDailyFinished,gtdDailyFailed
 
 " ----------------------------------------
 " Emergency
-syn match   gtdEmergency "[^\]]*\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdEmergency "[^\]]*\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,gtdDaily,gtdDailyFinished,gtdDailyFailed
 "syn match   gtdEmergency "^\s*\* .\+\[e:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Overdue
-syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
+syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,gtdDaily,gtdDailyFinished,gtdDailyFailed
 "syn match   gtdOverdue "\* *\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker
 
 " ----------------------------------------
 " Finished
-syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate
+syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate,gtdDaily,gtdDailyFinished,gtdDailyFailed
 "syn match   gtdFinished '.\+\(\[f:\)\@='
 
 " ----------------------------------------
@@ -92,6 +98,9 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdSeparator            Special
     hi  link    gtdDate                 String
     hi  link    gtdOverdueDate          hl_red_l
+    hi  link    gtdDaily                Normal
+    hi  link    gtdDailyFinished        hl_green_d
+    hi  link    gtdDailyFailed          hl_red_l
 "    hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
     hi  link    gtdPlanned              hl_blue
@@ -112,6 +121,9 @@ else
     hi          gtdSeparator            ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdDate                 ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdOverdueDate          ctermfg=DarkRed         guifg=DarkRed
+    hi link     gtdDaily                Normal
+    hi          gtdDailyFinished        ctermfg=DarkGreen       guifg=DarkGreen
+    hi          gtdDailyFailed          ctermfg=DarkRed         guifg=DarkRed
 "    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlanned              ctermfg=Cyan            guifg=Cyan

@@ -623,6 +623,12 @@ func! GtdBufInit()
     let b:fold_status=0
 endfunc
 
+func! GtdResetDaily()
+    silent! exec "'<,'>s/:#/:-/g"
+    silent! exec "'<,'>s/:v/:-/g"
+    silent! exec "'<,'>s/:x/:-/g"
+endfunc
+
 " personal {{{
 func! GetTodoLine()
     let todoLine = getline(".")

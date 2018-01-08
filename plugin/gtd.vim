@@ -33,6 +33,7 @@ autocmd FileType gtd        nnoremap <buffer> <silent>  <cr>        :call Select
 endif
 autocmd FileType gtt        nnoremap <buffer>           <cr>        :call GotoSchedDefinition()<cr>
 
+autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>gc  :call GtdResetDaily()<cr>
 autocmd FileType gtd        inoremap <buffer>           [] [ ] 
 
 "autocmd InsertLeave FileType gtd call AlignDate()
