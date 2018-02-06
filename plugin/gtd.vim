@@ -20,7 +20,8 @@ autocmd BufRead,BufNewFile *.gtl         setf gtl
 command! -nargs=0 Gtdo :call OpenGtd()
 
 " Key maps =====================================================================
-autocmd FileType gtd        nnoremap <buffer>           <TAB>       :ToggleFold<CR>
+"autocmd FileType gtd        nnoremap <buffer>           <TAB>       :ToggleFold<CR>
+autocmd FileType gtd        nnoremap <buffer>           <TAB>       :exec 'normal za'<CR>
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gp  :AddDatePlan<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gf  :FinishTodo<cr>
 "autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gr  :FinishRepeatedTask<cr>

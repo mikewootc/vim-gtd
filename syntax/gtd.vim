@@ -20,10 +20,14 @@ syn match   gtdDate "[0-9]\{4}\-[0-9]\{2}\-[0-9]\{2}"
 "syn region  gtdPlanDate start=/\[p:/ end=/\]/ oneline contains=gtdDate
 
 " ---------------------------------------- 
-" Daily
+" Tag Daily
 syn match   gtdDaily "<d\d:->"
 syn match   gtdDailyFinished "<d\d:v>"
 syn match   gtdDailyFailed "<d\d:x>"
+
+" ---------------------------------------- 
+" Tag except
+syn match   gtdShouldNot "<shnot>"
 
 " ----------------------------------------
 " Overdue date
@@ -50,7 +54,7 @@ syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,
 
 " ----------------------------------------
 " Finished
-syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate,gtdDaily,gtdDailyFinished,gtdDailyFailed
+syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate,gtdDaily,gtdDailyFinished,gtdDailyFailed,gtdShouldNot
 "syn match   gtdFinished '.\+\(\[f:\)\@='
 
 " ----------------------------------------
@@ -101,6 +105,7 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdDaily                Normal
     hi  link    gtdDailyFinished        hl_green_d
     hi  link    gtdDailyFailed          hl_red_l
+    hi  link    gtdShouldNot            hl_red_l
 "    hi  link    gtdPlanDate             hl_magenta
     hi  link    gtdTitle                Title
     hi  link    gtdPlanned              hl_blue
@@ -124,6 +129,7 @@ else
     hi link     gtdDaily                Normal
     hi          gtdDailyFinished        ctermfg=DarkGreen       guifg=DarkGreen
     hi          gtdDailyFailed          ctermfg=DarkRed         guifg=DarkRed
+    hi          gtdShouldNot            ctermfg=DarkRed         guifg=DarkRed
 "    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlanned              ctermfg=Cyan            guifg=Cyan

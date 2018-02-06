@@ -17,6 +17,10 @@ if !exists("g:gtd_auto_update_task_list")
     let g:gtd_auto_update_task_list = 1
 endif
 
+if !exists("g:gtd_task_list_lines")
+    let g:gtd_task_list_lines = 10
+endif
+
 if !exists("g:gtd_emergency_days")
     let g:gtd_emergency_days = 7
 endif
@@ -363,6 +367,11 @@ func! ListWinOpen(list)
         else                                    " Has no sched win, then open it by split.
             exe "split +buffer" . listBufNum
         endif
+    endif
+
+    if g:gtd_task_list_lines
+        " Resize task window to N lines.
+        silent! exec "resize " . g:gtd_task_list_lines
     endif
 
     " Write content
