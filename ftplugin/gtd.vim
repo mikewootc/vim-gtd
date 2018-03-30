@@ -603,6 +603,22 @@ func! TaskList()
     "setlocal nomodifiable
 endfunc
 
+func! TaskListToggle()
+    let i = 1
+    while i <= winnr('$')
+        let bnr = winbufnr(i)
+        let bname = bufname(bnr)
+        if bname == g:listBufferName
+            exec i.'wincmd w'
+            exec "q"
+            return
+        endif
+        let i += 1
+    endwhile
+
+    call TaskList()
+endfunc
+
 func! TaskListUpdate()
     let i = 1
     while i <= winnr('$')
@@ -658,6 +674,7 @@ command! FinishTodo         call FinishTodo()
 command! CheckOverdue       call CheckOverdue()
 command! SchedList          call SchedList()
 command! TaskList           call TaskList()
+command! TaskListToggle     call TaskListToggle()
 command! AlignDate          call AlignDate()
 
 autocmd BufEnter        __gtd_list_buffer__     call SchedListBufInit()
