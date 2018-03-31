@@ -700,4 +700,5 @@ endif
 " l Long lines are not broken in insert mode: When a line was longer than 'textwidth' when the insert command started, Vim does not automatically format it.
 setlocal fo-=t fo-=c fo+=roql
 setlocal comments=://
+setlocal comments+=:*
 
