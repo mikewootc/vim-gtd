@@ -3,6 +3,12 @@ if exists("b:did_ftplugin")
   finish
 endif
 
+" If auto-hide task list window when jump to task line in main window.
+if !exists("g:gtd_hide_tasklist_when_goto_def")
+    let g:gtd_hide_tasklist_when_goto_def = 0
+endif
+
+
 " Don't load another plugin for this buffer
 let b:did_ftplugin = 1
 
@@ -16,10 +22,16 @@ func! GotoSchedDefinition()
     let locPair = split(loc, ':')
     let file = locPair[0]
     let line = locPair[1]
+    let taskWinNr = winnr()
 
     wincmd j
     exec 'vi ' . file
     exec 'normal ' line . 'gg'
+
+    if g:gtd_hide_tasklist_when_goto_def
+        exec taskWinNr . 'wincmd w'
+        exec 'q'
+    endif
 endfunc
 
 "autocmd FileType gtt nnoremap <buffer> <cr> :call GotoSchedDefinition()<cr>

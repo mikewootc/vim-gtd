@@ -18,7 +18,7 @@ if !exists("g:gtd_auto_update_task_list")
 endif
 
 if !exists("g:gtd_task_list_lines")
-    let g:gtd_task_list_lines = 10
+    let g:gtd_task_list_lines = 15
 endif
 
 if !exists("g:gtd_emergency_days")
