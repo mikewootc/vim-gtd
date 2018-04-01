@@ -38,7 +38,7 @@ autocmd FileType gtd        inoremap <buffer>           [] [ ]
 autocmd InsertLeave *.gtd call AlignDate()
 
 " Simple map {{{
-autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>p   :AddDatePlan<cr>
+autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>p   :AddDatePlan<cr>Eh
 autocmd FileType gtd        nnoremap <buffer> <silent>  ff          :FinishTodo<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  tt          :TaskListToggle<cr>
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>c   :call GtdResetDaily()<cr>
