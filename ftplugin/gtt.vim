@@ -16,7 +16,7 @@ let b:did_ftplugin = 1
 runtime! ftplugin/gtd.vim
 
 
-func! GotoSchedDefinition()
+func! GotoSchedDefinition(checkAutoHide)
     let line = getline(".")
     let loc = matchstr(line, '\(<l:\)\@<=.*:\d\+>\@=')
     let locPair = split(loc, ':')
@@ -28,7 +28,7 @@ func! GotoSchedDefinition()
     exec 'vi ' . file
     exec 'normal ' line . 'gg'
 
-    if g:gtd_hide_tasklist_when_goto_def
+    if g:gtd_hide_tasklist_when_goto_def && a:checkAutoHide
         exec taskWinNr . 'wincmd w'
         exec 'q'
     endif
