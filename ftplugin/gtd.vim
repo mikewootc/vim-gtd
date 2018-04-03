@@ -236,10 +236,28 @@ func! FinishRepeatedTask()
     call setline(".", newLine)
 endfunc
 
+
+" Finish daily routine task like:
+"   <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Get up early. [t:2018-04-04]
+" Where <d2:v> means finished, <d3:->means next todo(tomorrow).
+" NOTE: Just support less than 10 days(since just checked 1 '\d' character) now.
+func! FinishDailyTask()
+    let line = getline(".")
+    let planDate = GetDate(line, "[peto]")
+    " Calc the next day.
+    python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+
+    let line = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " substitute date to then next day.
+    let line = substitute(line, '<d\(\d\):->', '<d\1:v>', '') " Mark finished: like: <d2:v>
+    call setline(".", line)
+endfunc
+
 func! FinishTodo()
     let line = getline(".")
     if match(line, '<r:\d.\+>') > 0
         call FinishRepeatedTask()
+    elseif match(line, '<d\d:->') > 0
+        call FinishDailyTask()
     else
         call AddDate("f", g:gtd_date_align_col + g:dateWidth)
     endif
