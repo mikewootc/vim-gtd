@@ -34,6 +34,14 @@ func! GotoSchedDefinition(checkAutoHide)
     endif
 endfunc
 
+func! TaskListBackupPosition()
+    let b:taskListBakPos = line('.')
+endfunc
+
+func! TaskListRestorePosition()
+    exec 'normal ' . b:taskListBakPos . 'gg'
+endfunc
+
 "autocmd FileType gtt nnoremap <buffer> <cr> :call GotoSchedDefinition()<cr>
 
 

@@ -29,9 +29,9 @@ autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>gt  :TaskList<cr
 if g:gtd_pickup_date_from_calendar
 autocmd FileType gtd        nnoremap <buffer> <silent>  <cr>        :call SelectDate()<cr>
 endif
-autocmd FileType gtt        nnoremap <buffer>           <cr>        :call GotoSchedDefinition(1)<cr>
+autocmd FileType gtt        nnoremap <buffer>           <cr>        :call GotoSchedDefinition(0)<cr>
 autocmd FileType gtt        nnoremap <buffer>           tt          :q<cr>
-autocmd FileType gtt        nnoremap <buffer>           ff          jmnl:call GotoSchedDefinition(0)<cr> :FinishTodo<cr> :w<cr> <c-w><c-w>'n
+autocmd FileType gtt        nnoremap <buffer>           ff          :call TaskListBackupPosition()<cr>:call GotoSchedDefinition(0)<cr> :FinishTodo<cr> :w<cr> <c-w><c-w>:call TaskListRestorePosition()<cr>
 autocmd FileType gtt        nnoremap <buffer>           u           <c-w>j u:w<cr> <c-w>k
 
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>gc  :call GtdResetDaily()<cr>

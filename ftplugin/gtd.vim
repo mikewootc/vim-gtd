@@ -230,7 +230,7 @@ func! FinishRepeatedTask()
 
     let newLine = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " Calc new date
     "echom "newLine" newLine
-    exec "normal yy"
+    exec "normal zRyy"
     call AddDate("f", g:gtd_date_align_col + g:dateWidth)
     exec "normal p"
     call setline(".", newLine)
