@@ -9,10 +9,6 @@ Overview:
 ![overview](./test/overview.png)
 
 
-Tasklist overview:
-
-![tasklist overview](./test/tasklist.png)
-
 ## Features
 
 * Manage projects(subprojects) and task.
