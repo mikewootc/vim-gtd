@@ -32,6 +32,7 @@ endif
 autocmd FileType gtt        nnoremap <buffer>           <cr>        :call GotoSchedDefinition(1)<cr>zO
 autocmd FileType gtt        nnoremap <buffer>           tt          :q<cr>
 autocmd FileType gtt        nnoremap <buffer>           ff          :call TaskListBackupPosition()<cr>:call GotoSchedDefinition(0)<cr> :FinishTodo<cr> :w<cr> <c-w><c-w>:call TaskListRestorePosition()<cr>
+autocmd FileType gtt        nnoremap <buffer>           fx          :call TaskListBackupPosition()<cr>:call GotoSchedDefinition(0)<cr> :FailDailyTask<cr> :w<cr> <c-w><c-w>:call TaskListRestorePosition()<cr>
 autocmd FileType gtt        nnoremap <buffer>           u           <c-w>j u:w<cr> <c-w>k
 
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>gc  :call GtdResetDaily()<cr>
@@ -42,6 +43,7 @@ autocmd InsertLeave *.gtd call AlignDate()
 " Simple map {{{
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>p   :AddDatePlan<cr>Eh
 autocmd FileType gtd        nnoremap <buffer> <silent>  ff          :FinishTodo<cr>
+autocmd FileType gtd        nnoremap <buffer> <silent>  fx          :FailDailyTask<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  tt          :TaskListToggle<cr>
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>c   :call GtdResetDaily()<cr>
 " Simple map }}}

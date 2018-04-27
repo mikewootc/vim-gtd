@@ -21,17 +21,56 @@ Tasklist overview:
 * Specify workers by @Somebody mark.
 * Specify context by #Somewhere# mark
 * Support priorities for TODOs.
-* Support repeated tasks.
+* Support repeated tasks / daily tasks.
+
+
 
 ## Usage
 
 The easiest way to get started is playing around with the example file gtd/test/t.gtdt. And with key mapping:
 
     <leader>gp : Add gtd plan date.
-    <leader>gf : Add gtd finish date.
-    <leader>gc : Check if any task is overdue.
+    <leader>gf : Finish task(or project).
     <leader>gt : Show the planned tasks in a splited window, with emergency and overdued task included.
+    <leader>gc : Reset daily task, such as: <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Get up early. [t:2018-04-04]
     <tab>      : Switch folding status(between zO and zC).
+
+The more handy short cut:
+
+    <leader>p : Add gtd plan date.
+    tt        : Toggle task list.
+    ff        : Finish task.
+    fx        : Fail daily task.
+    <leader>c : Reset daily task, such as: <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Get up early. [t:2018-04-04]
+
+## Syntax
+
+    Title:                  [[ThisIsTitle]]
+    High priority project:  [*] This is a high priority project
+    Low priority project:   [.] This is a low priority project
+
+    Normal task:            * task here
+    Daily task:             * <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Get up early.
+                                // <d2:v> means finished, <d3:x> means failed, <d4:->means next todo(tomorrow).
+
+    Date(planned):          [p:2018-05-02]
+    Date(emergency):        [e:2018-05-02]
+    Date(today):            [t:2018-05-02]
+    Date(overdued):         [o:2018-05-02]
+    Date(finished):         [f:2018-05-02]
+
+    Context:                #Home#
+    Worker:                 @Mike
+    Should not task:        <shnot> This the task I actually did but should not do according to plan.
+
+    Bold:                   **Bold**
+    Note:                   > Note here
+    Comment:                // Comment here
+    Separator line:         Work ================================================
+    Fold:                   Folded {{{
+                                  Folded.
+                                  Folded2.
+                            }}}
 
 ## Config
 
