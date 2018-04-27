@@ -2,7 +2,6 @@
 [[TestTitle]]
     [ ] parent project
         [ ] This is a unassigned project.
-        [ ] This is another unassigned project.
         [ ] This is a planned project.                                                              [p:2017-08-26]
         [ ] This is another planned project.                                                        [p:2017-08-27]
         [ ] #Home# This is context show.
@@ -20,6 +19,7 @@
     [ ] This is a overdued project.                                                                 [o:2017-08-26]
     [ ] This is a finished project.                                                                               [f:2017-08-26]
     [ ] This is another finished project.                                                           [p:2017-08-26][f:2017-08-26]
+            * <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Daily task.                                [t:2018-04-04]
             * Task
             * Task2
             **Bold**
@@ -31,7 +31,6 @@
                   Folded3.
             }}}
 
-    * <d1:v><d2:v><d3:-><d4:-><d5:-><d6:-><d7:-> Get up early.                             [e:2018-04-04]
 [[Inbox]]
     [ ] Project1
     [ ] Project2
