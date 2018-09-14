@@ -853,10 +853,10 @@ function! GtdCalendar(...)
   execute 'nnoremap <silent> <buffer> r :call GtdCalendar(' . dir . ',' . vyear . ',' . vmnth . ')<cr>'
   let pnav = s:GtdGetToken(g:gtd_calendar_navi_label, ',', 1)
   let nnav = s:GtdGetToken(g:gtd_calendar_navi_label, ',', 3)
-  execute 'nnoremap <silent> <buffer> <Up>    :call <SID>CalendarDoAction("<' . pnav . '")<cr>'
-  execute 'nnoremap <silent> <buffer> <Left>  :call <SID>CalendarDoAction("<' . pnav . '")<cr>'
-  execute 'nnoremap <silent> <buffer> <Down>  :call <SID>CalendarDoAction("' . nnav . '>")<cr>'
-  execute 'nnoremap <silent> <buffer> <Right> :call <SID>CalendarDoAction("' . nnav . '>")<cr>'
+  "execute 'nnoremap <silent> <buffer> <Up>    :call <SID>CalendarDoAction("<' . pnav . '")<cr>'
+  "execute 'nnoremap <silent> <buffer> <Left>  :call <SID>CalendarDoAction("<' . pnav . '")<cr>'
+  "execute 'nnoremap <silent> <buffer> <Down>  :call <SID>CalendarDoAction("' . nnav . '>")<cr>'
+  "execute 'nnoremap <silent> <buffer> <Right> :call <SID>CalendarDoAction("' . nnav . '>")<cr>'
 
 "  execute 'nnoremap <silent> <buffer> <c-cr> :call <SID>ReturnSelecteDate()<cr>'
 
