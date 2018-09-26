@@ -46,6 +46,7 @@ autocmd FileType gtd        nnoremap <buffer> <silent>  ff          :FinishTodo<
 autocmd FileType gtd        nnoremap <buffer> <silent>  fx          :FailDailyTask<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  tt          :TaskListToggle<cr>
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>c   :call GtdResetDaily()<cr>
+autocmd FileType gtd        nnoremap <buffer>           <leader>aa  :Al 
 " Simple map }}}
 
 "autocmd BufEnter    *.gtd echom "BufEnter"

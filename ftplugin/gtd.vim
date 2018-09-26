@@ -680,6 +680,47 @@ func! GtdResetDaily()
     silent! exec "'<,'>s/:x/:-/g"
 endfunc
 
+
+func! AddAlarm(text)
+    "eechom a:text
+    let txt = substitute(a:text, '^\s*\(.\{-}\)\s*$', '\1', '')
+    "eechom txt
+    let firstChar = strpart(txt, 0, 1)
+    "eechom firstChar
+    let pm = 0
+
+    " Check whether has a 'p' leading. (for pm)
+    if firstChar == "p"
+        let pm = 1
+        let txt = strpart(txt, 1, 36)
+        let txt = substitute(txt, '^\s*\(.\{-}\)\s*$', '\1', '')
+    endif
+
+    " Get hour & minute
+    let lstTxt = split(txt, '[: ]\+')
+    let hour = get(lstTxt, 0)
+    let minute = get(lstTxt, 1)
+
+    if pm
+        let hour += 12
+    endif
+
+    if len(hour) < 2
+        let hour = '0' . hour
+    endif
+    if len(minute) < 2
+        let minute = '0' . minute
+    endif
+
+    " Set alarm string
+    let alarmText = '<a:' . hour . ':' . minute . '>'
+
+    let line = getline(".")
+    let newLine = substitute(line, '\( \+\[[peto]:\d\{4}-\d\{2}-\d\{2}\]\)', ' ' . alarmText . '\1', '')
+    call setline(".", newLine)
+    exec "normal i\<esc>"
+endfunc
+
 " personal {{{
 func! GetTodoLine()
     let todoLine = getline(".")
@@ -703,6 +744,7 @@ command! SchedList          call SchedList()
 command! TaskList           call TaskList()
 command! TaskListToggle     call TaskListToggle()
 command! AlignDate          call AlignDate()
+command! -nargs=1 Al        call AddAlarm(<f-args>)
 
 autocmd BufEnter        __gtd_list_buffer__     call SchedListBufInit()
 autocmd BufEnter        *.gtd,*.gtdt            call GtdBufInit()
