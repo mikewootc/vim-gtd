@@ -53,40 +53,87 @@ let b:did_ftplugin = 1
 " ------------------------------------------------------------------------------
 " Python stuff
 " ------------------------------------------------------------------------------
+"exec 'pyfile ' . getcwd() . '/gtd.py'
 
-python3 << EOF
-import datetime, time, vim
+let s:plug = expand("<sfile>:p:h:h")
+let s:script = s:plug . '/script/gtd.py'
+if has('python3')
+    exec 'py3file ' . fnameescape(s:script)
+elseif has('python')
+    exec 'pyfile ' . fnameescape(s:script)
+endif
 
-# Calc the date interval of (endDate - startDate)
-# startDate: string looks like: 20170827
-# endDate  : string looks like: 20170827
-# return   : date interval. And return value for vim is in b:pyRet.
-def PyDateDiffer(startDate, endDate):
-    timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
-    timeE = time.strptime(vim.eval(endDate),"%Y%m%d")
-    pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
-    pyEndDate   = datetime.datetime(timeE[0],timeE[1],timeE[2],timeE[3],timeE[4],timeE[5])
-    differ = (pyEndDate - pyStartDate).days
 
-    b = vim.current.buffer
-    b.vars["pyRet"] = differ
-    return differ
 
-def PyDateAdd(startDate, addDays, outFormat):
-    timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
-    pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
-    delta = datetime.timedelta(days=addDays)
-    toDate = pyStartDate + delta
-
-    b = vim.current.buffer
-    if outFormat == '%Y-%m-%d':
-        ret = toDate.strftime('%Y-%m-%d')
-        b.vars["pyRet"] = ret
-    else:
-        ret = toDate.strftime('%Y%m%d')
-        b.vars["pyRet"] = ret
-    #b.vars["pyRet"] = differ
-EOF
+"if has('python3')
+"    python3 << EndOfPython3
+"    import datetime, time, vim
+"    
+"    # Calc the date interval of (endDate - startDate)
+"    # startDate: string looks like: 20170827
+"    # endDate  : string looks like: 20170827
+"    # return   : date interval. And return value for vim is in b:pyRet.
+"    def PyDateDiffer(startDate, endDate):
+"        timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
+"        timeE = time.strptime(vim.eval(endDate),"%Y%m%d")
+"        pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+"        pyEndDate   = datetime.datetime(timeE[0],timeE[1],timeE[2],timeE[3],timeE[4],timeE[5])
+"        differ = (pyEndDate - pyStartDate).days
+"    
+"        b = vim.current.buffer
+"        b.vars["pyRet"] = differ
+"        return differ
+"    
+"    def PyDateAdd(startDate, addDays, outFormat):
+"        timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
+"        pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+"        delta = datetime.timedelta(days=addDays)
+"        toDate = pyStartDate + delta
+"    
+"        b = vim.current.buffer
+"        if outFormat == '%Y-%m-%d':
+"            ret = toDate.strftime('%Y-%m-%d')
+"            b.vars["pyRet"] = ret
+"        else:
+"            ret = toDate.strftime('%Y%m%d')
+"            b.vars["pyRet"] = ret
+"        #b.vars["pyRet"] = differ
+"    EndOfPython3
+"else
+"    python << EndOfPython
+"    import datetime, time, vim
+"    
+"    # Calc the date interval of (endDate - startDate)
+"    # startDate: string looks like: 20170827
+"    # endDate  : string looks like: 20170827
+"    # return   : date interval. And return value for vim is in b:pyRet.
+"    def PyDateDiffer(startDate, endDate):
+"        timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
+"        timeE = time.strptime(vim.eval(endDate),"%Y%m%d")
+"        pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+"        pyEndDate   = datetime.datetime(timeE[0],timeE[1],timeE[2],timeE[3],timeE[4],timeE[5])
+"        differ = (pyEndDate - pyStartDate).days
+"    
+"        b = vim.current.buffer
+"        b.vars["pyRet"] = differ
+"        return differ
+"    
+"    def PyDateAdd(startDate, addDays, outFormat):
+"        timeS = time.strptime(vim.eval(startDate),"%Y%m%d")
+"        pyStartDate = datetime.datetime(timeS[0],timeS[1],timeS[2],timeS[3],timeS[4],timeS[5])
+"        delta = datetime.timedelta(days=addDays)
+"        toDate = pyStartDate + delta
+"    
+"        b = vim.current.buffer
+"        if outFormat == '%Y-%m-%d':
+"            ret = toDate.strftime('%Y-%m-%d')
+"            b.vars["pyRet"] = ret
+"        else:
+"            ret = toDate.strftime('%Y%m%d')
+"            b.vars["pyRet"] = ret
+"        #b.vars["pyRet"] = differ
+"    EndOfPython
+"endif
 
 " ------------------------------------------------------------------------------
 " Main stuff
@@ -223,7 +270,11 @@ endfunc
 func! FinishRepeatedTask()
     let line = getline(".")
     let planDate = GetDate(line, "[peto]")
-    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    if has('python3')
+        python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    else
+        python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    endif
     "echom 'new date' b:pyRet
 
     let newLine = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " Calc new date
@@ -243,7 +294,11 @@ func! ChangeRepeatedTaskMark(mark)
     let line = getline(".")
     let planDate = GetDate(line, "[peto]")
     " Calc the next day.
-    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    if has('python3')
+        python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    else
+        python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    endif
 
     let line = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " substitute date to then next day.
     let line = substitute(line, '<d\(\d\):->', '<d\1:'. a:mark . '>', '') " Mark finished: like: <d2:v>
@@ -332,7 +387,11 @@ func! CheckOverdue()
                     "endif
                     call ChangePlannedTag(line, 'o', i)
                 else
-                    python3 PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
+                    if has('python3')
+                        python3 PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
+                    else
+                        python PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
+                    endif
                     echom b:pyRet
                     if b:pyRet == 0                         " today
                         call ChangePlannedTag(line, 't', i)
