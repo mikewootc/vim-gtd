@@ -54,7 +54,7 @@ let b:did_ftplugin = 1
 " Python stuff
 " ------------------------------------------------------------------------------
 
-python << EOF
+python3 << EOF
 import datetime, time, vim
 
 # Calc the date interval of (endDate - startDate)
@@ -81,11 +81,9 @@ def PyDateAdd(startDate, addDays, outFormat):
     b = vim.current.buffer
     if outFormat == '%Y-%m-%d':
         ret = toDate.strftime('%Y-%m-%d')
-        print ret
         b.vars["pyRet"] = ret
     else:
         ret = toDate.strftime('%Y%m%d')
-        print ret
         b.vars["pyRet"] = ret
     #b.vars["pyRet"] = differ
 EOF
@@ -225,7 +223,7 @@ endfunc
 func! FinishRepeatedTask()
     let line = getline(".")
     let planDate = GetDate(line, "[peto]")
-    python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
     "echom 'new date' b:pyRet
 
     let newLine = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " Calc new date
@@ -245,7 +243,7 @@ func! ChangeRepeatedTaskMark(mark)
     let line = getline(".")
     let planDate = GetDate(line, "[peto]")
     " Calc the next day.
-    python PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
+    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
 
     let line = substitute(line, '\([peto]:\)\d\{4}-\d\{2}-\d\{2}', '\1' . b:pyRet, '') " substitute date to then next day.
     let line = substitute(line, '<d\(\d\):->', '<d\1:'. a:mark . '>', '') " Mark finished: like: <d2:v>
@@ -334,7 +332,7 @@ func! CheckOverdue()
                     "endif
                     call ChangePlannedTag(line, 'o', i)
                 else
-                    python PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
+                    python3 PyDateDiffer(vim.eval("today"), vim.eval("planDate"))
                     echom b:pyRet
                     if b:pyRet == 0                         " today
                         call ChangePlannedTag(line, 't', i)
