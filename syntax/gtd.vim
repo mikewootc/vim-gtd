@@ -56,7 +56,11 @@ syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,
 " ----------------------------------------
 " Finished
 syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate,gtdDaily,gtdDailyFinished,gtdDailyFailed,gtdShould,gtdShouldNot
-"syn match   gtdFinished '.\+\(\[f:\)\@='
+
+" ----------------------------------------
+" Failed
+syn match   gtdFailed '^\s*\~\s.*'
+
 
 " ----------------------------------------
 " High prio project
@@ -118,6 +122,7 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdLowPrio              Comment
 "    hi  link    gtdSubstep              PreProc
     hi  link    gtdFinished             hl_green_d
+    hi  link    gtdFailed               hl_red
     hi  link    gtdContext              hl_cyan
     hi  link    gtdWorker               hl_brown
     hi          gtdBold                 cterm=bold              gui=bold
@@ -133,7 +138,6 @@ else
     hi          gtdDailyFailed          ctermfg=DarkRed         guifg=DarkRed
     hi          gtdShould               ctermfg=LightGreen      guifg=LightGreen
     hi          gtdShouldNot            ctermfg=DarkRed         guifg=DarkRed
-"    hi          gtdPlanDate             ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdTitle                ctermfg=DarkMagenta     guifg=DarkMagenta
     hi          gtdPlanned              ctermfg=Cyan            guifg=Cyan
     hi          gtdToday                ctermfg=Yellow          guifg=Yellow
@@ -141,8 +145,8 @@ else
     hi          gtdOverdue              ctermfg=DarkRed         guifg=DarkRed
     hi          gtdHighPrio             ctermfg=DarkYellow      guifg=DarkYellow
     hi          gtdLowPrio              ctermfg=DarkGray        guifg=DarkGray
-"    hi          gtdSubstep              ctermfg=DarkBlue        guifg=DarkBlue
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
+    hi          gtdFailed               ctermfg=DarkRed         guifg=DarkRed
     hi          gtdContext              ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdWorker               ctermfg=Blue            guifg=Blue
     hi          gtdBold                 cterm=bold              gui=bold
