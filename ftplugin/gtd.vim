@@ -772,6 +772,15 @@ func! AddAlarm(text)
     " Set alarm string
     let alarmText = '<a:' . hour . ':' . minute . '>'
 
+    " Add plan date first(if not exists)
+    let line = getline(".")
+    let planDate = GetDate(line, "[peto]")
+    if !planDate
+        echom 'no plan date'
+        call AddDate("p", g:gtd_date_align_col)
+    endif
+
+    " Set new line with alarm
     let line = getline(".")
     let newLine = substitute(line, '\( \+\[[peto]:\d\{4}-\d\{2}-\d\{2}\]\)', ' ' . alarmText . '\1', '')
     call setline(".", newLine)
