@@ -459,11 +459,13 @@ func! ListWinOpen(list)
 
     " Write content
     setlocal modifiable
+    let delBak = @"
     %delete
     for line in a:list
         call append(line('$'), line)
     endfor
     1delete
+    let @" = delBak
     setlocal nomodifiable
 endfunc
 
