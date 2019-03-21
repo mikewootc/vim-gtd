@@ -197,6 +197,11 @@ func! GetDate(line, type)
     return date
 endfunc
 
+func! GetDueDate(line)
+    return GetDate(a:line, "[peto]")
+endfunc
+
+
 " Add date on current(cursor) line.
 " dateType: "p" / "f" / ...
 " colNum  : Align date to colNum.
@@ -210,7 +215,7 @@ endfunc
 
 func! FinishRepeatedTask()
     let line = getline(".")
-    let planDate = GetDate(line, "[peto]")
+    let planDate = GetDueDate(line)
     "if has('python3')
     "    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
     "else
@@ -234,7 +239,7 @@ endfunc
 " mark: 'v': finished, 'x': failed.
 func! ChangeRepeatedTaskMark(mark)
     let line = getline(".")
-    let planDate = GetDate(line, "[peto]")
+    let planDate = GetDueDate(line)
     " Calc the next day.
     "if has('python3')
     "    python3 PyDateAdd(vim.eval("planDate"), 1, "%Y-%m-%d")
@@ -317,7 +322,7 @@ func! CheckOverdue()
 
     while i <= totalLines
         let line = getline(i)                                   "echom line
-        let planDate = GetDate(line, "[peto]")
+        let planDate = GetDueDate(line)
         let completeDate = GetDate(line, "f")                   "echom 'completeDate: ' . completeDate
         if completeDate
             "echom "Completed"
@@ -586,33 +591,43 @@ func! TaskList()
                 endif
 
                 " Insert node
-                let j = 0
-                let lineDate = GetDate(line, "[peto]")
-                "let lineForList = line . '  <l:' . bname . ':' . (i + 1) . '>'
+                let lineDate = GetDueDate(line)
+                let matchWhenHaveFree = match(line, '\.\.\.\.')  " 当空闲时就处理
+
+                if !lineDate && matchWhenHaveFree < 0  " Ignore not-planned tasks and not when-have-free
+                    let i += 1
+                    continue
+                endif
+
                 let lineForList = substitute(line, '\(^\s*\)\([^\[]\+\)', '\2\1', '') . '  <l:' . bname . ':' . (i + 1) . '>'
-                "echom line
-                "echom lineDate
-                if len(listTask) == 0 || !lineDate
-                    "echom "Push back"
+                if len(listTask) == 0   " 空列表, 添加第一项
                     call add(listTask, lineForList)
                     let i += 1
                     continue
-                else
-                    while j < len(listTask)
-                        let itDate = GetDate(listTask[j], "[peto]")
-                        if lineDate < itDate
-                                    \ || !itDate " 确保有计划时间的放在没有计划时间的之前
-                            "echom "Insert" j lineDate itDate
-                            call insert(listTask, lineForList, j)
-                            break
-                        endif
-                        let j += 1
-                    endwhile
-                    if j >= len(listTask)
-                        "echom "Push back 2"
-                        call add(listTask, lineForList)
-                    endif
                 endif
+
+                if matchWhenHaveFree >= 0   " 空闲时处理
+                    call insert(listTask, lineForList, 0)
+                    let i += 1
+                    continue
+                endif
+
+                let j = 0
+                while j < len(listTask)
+                    let itDate = GetDueDate(listTask[j])
+                    if itDate && lineDate < itDate
+                        "echom "Insert" j lineDate itDate
+                        call insert(listTask, lineForList, j)
+                        break
+                    endif
+
+                    let j += 1
+                endwhile
+                if j >= len(listTask)
+                    "echom "Push back 2"
+                    call add(listTask, lineForList)
+                endif
+
             endif
 
             let i += 1
@@ -721,7 +736,7 @@ func! AddAlarm(text)
 
     " Add plan date first(if not exists)
     let line = getline(".")
-    let planDate = GetDate(line, "[peto]")
+    let planDate = GetDueDate(line)
     if !planDate
         echom 'no plan date'
         call AddDate("p", g:gtd_date_align_col)
