@@ -75,6 +75,9 @@ elseif has('python')
     exec 'pyfile ' . fnameescape(s:script)
 endif
 
+let s:strIdPattern = '\d\{8}-\d\{6}'
+let s:strIdTagPattern = '<id:\d\{8}-\d\{6}>'
+
 
 " ------------------------------------------------------------------------------
 " Main stuff
@@ -201,16 +204,33 @@ func! GetDueDate(line)
     return GetDate(a:line, "[peto]")
 endfunc
 
+" Add a string to current (at tail)
+" str: string to add to current line
+" colNum: column to align to.
+func! AddStringToCurLine(str, colNum)
+    let line = getline(".")
+    exec "normal $"
+    if a:colNum >= 0
+        let width = virtcol(".")
+        let r = repeat(" ", a:colNum - width - 1)
+    else
+        let r = ''
+    endif
+    let newLine = line . r . a:str
+    call setline(".", newLine)
+endfunc
 
 " Add date on current(cursor) line.
 " dateType: "p" / "f" / ...
 " colNum  : Align date to colNum.
 func! AddDate(dateType, colNum)
-    let line = getline(".")
-    exec "normal $"
-    let width = virtcol(".")
-    let newLine = line . repeat(" ", a:colNum - width - 1) . strftime("[" . a:dateType . ":%Y-%m-%d]")
-    call setline(".", newLine)
+"    let line = getline(".")
+"    exec "normal $"
+"    let width = virtcol(".")
+"    let newLine = line . repeat(" ", a:colNum - width - 1) . strftime("[" . a:dateType . ":%Y-%m-%d]")
+"    call setline(".", newLine)
+
+    call AddStringToCurLine(strftime("[" . a:dateType . ":%Y-%m-%d]"), a:colNum)
 endfunc
 
 func! FinishRepeatedTask()
@@ -555,6 +575,12 @@ endfunc
 "func! SortTodoList(list, compare)
 "endfunc
 
+" Add a new item (which means a new line after current line with an ID tag)
+func! NewTodo()
+    exec "normal o"
+    call AddId()
+endfunc
+
 func! TaskList()
     let listTask       = []
     let bufferAmount        = bufnr("$")
@@ -760,6 +786,56 @@ func! GetTodoLine()
 endfunc
 " personal }}}
 
+func! AddId()
+    "call AddStringToCurLine(' <id:' . localtime() . '>', -1)
+    call AddStringToCurLine(strftime(" <id:%Y%m%d-%H%M%S>"), -1)
+endfunc
+
+"" Get ID for a todo line
+"" line: line string
+"func! GetId(line)
+"endfunc
+
+" Get the tree path of id
+" lineNum: number of line
+" return: list of id path. e.g.: [idGrandpa, idFather, idSon, idGrandson]
+func! GetIdpath(lineNum)
+    let lstPath = []
+    let lineNum = a:lineNum
+    let line = getline(lineNum)
+    let id = matchstr(line, s:strIdTagPattern)
+    let todoLevel = GetTodoLevel(line)
+    "echo 'id: ' id ', todoLevel: ' todoLevel
+    if len(id) <= 0
+        echoerr 'No id for current line'
+        return []
+    endif
+    call insert(lstPath, id, 0)
+
+    let bakTodoLevel = todoLevel
+    while lineNum > 1
+        let line = getline(lineNum)
+        let todoLevel = GetTodoLevel(line)
+        if len(line) > 0 && todoLevel < bakTodoLevel       " It's my ancestor
+            let id = matchstr(line, s:strIdTagPattern)
+            if len(id) <= 0                     " has no id in this line
+                echoerr 'Found ancestor node with no ID in line:' lineNum
+                return []
+            endif
+            call add(lstPath, id)
+        endif
+        let bakTodoLevel = todoLevel
+        let lineNum = lineNum - 1
+    endw
+    echo 'GetIdpath, result: ' lstPath
+
+    return lstPath
+endfunc
+
+
+func! ArchiveTodo()
+    call GetIdpath(line('.'))
+endfunc
 
 " Commands =====================================================================
 command! ToggleFold         call ToggleFold()

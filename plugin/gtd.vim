@@ -42,11 +42,15 @@ autocmd InsertLeave *.gtd call AlignDate()
 
 " Simple map {{{
 autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>p   :AddDatePlan<cr>Eh
+autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>i   :call AddId()<cr>
+autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>n   :call NewTodo()<cr>
+autocmd FileType gtd        nnoremap <buffer> <silent>  <leader>x   :call ArchiveTodo()<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  ff          :FinishTodo<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  fx          :FailDailyTask<cr>
 autocmd FileType gtd        nnoremap <buffer> <silent>  tt          :TaskListToggle<cr>
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>c   :call GtdResetDaily()<cr>
 autocmd FileType gtd        nnoremap <buffer>           <leader>aa  :Al 
+autocmd FileType gtd        inoremap <buffer> <silent>  <c-i>       <esc>:call AddId()<cr>
 " Simple map }}}
 
 "autocmd BufEnter    *.gtd echom "BufEnter"

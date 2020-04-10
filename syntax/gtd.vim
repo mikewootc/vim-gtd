@@ -101,6 +101,11 @@ syn match   gtdComment "\/\/.*" contains=gtdShouldNot,gtdShould
 syn match   gtdBrace "{{{\d*"
 syn match   gtdBrace "}}}\d*"
 
+" ----------------------------------------
+" Item ID
+"syn match   gtdItemId '<id:\d{8}-\d{6}>' conceal
+syn match   gtdItemId /<id:\d\{8}-\d\{6}>/ conceal
+
 
 
 if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
@@ -129,6 +134,7 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
     hi  link    gtdNote                 Comment
     hi  link    gtdComment              Comment
     hi          gtdBrace                ctermfg=DarkGray        guifg=#303030
+    hi  link    gtdItemId               hl_gray_dd
 else
     hi          gtdSeparator            ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdDate                 ctermfg=DarkCyan        guifg=DarkCyan
@@ -153,6 +159,7 @@ else
     hi          gtdNote                 ctermfg=DarkGray        guifg=DarkGray
     hi          gtdComment              ctermfg=DarkGray        guifg=DarkGray
     hi          gtdBrace                ctermfg=DarkGray        guifg=DarkGray
+    hi          gtdItemId               ctermfg=DarkGray        guifg=DarkGray
 endif
 
 
