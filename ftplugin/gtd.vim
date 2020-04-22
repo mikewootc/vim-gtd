@@ -810,7 +810,7 @@ func! GetIdpath(lineNum)
         echoerr 'No id for current line'
         return []
     endif
-    call insert(lstPath, id, 0)
+    call insert(lstPath, {'id': id, 'lineNum': lineNum}, 0)
 
     let bakTodoLevel = todoLevel
     while lineNum > 1
@@ -830,6 +830,9 @@ func! GetIdpath(lineNum)
     echo 'GetIdpath, result: ' lstPath
 
     return lstPath
+endfunc
+
+func! GetParentPos(filePath, childIdPath, newIfNull)
 endfunc
 
 
