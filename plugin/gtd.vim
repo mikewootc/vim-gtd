@@ -50,7 +50,7 @@ autocmd FileType gtd        nnoremap <buffer> <silent>  fx          :FailDailyTa
 autocmd FileType gtd        nnoremap <buffer> <silent>  tt          :TaskListToggle<cr>
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>c   :call GtdResetDaily()<cr>
 autocmd FileType gtd        nnoremap <buffer>           <leader>aa  :Al 
-autocmd FileType gtd        inoremap <buffer> <silent>  <c-i>       <esc>:call AddId()<cr>
+autocmd FileType gtd        inoremap <buffer> <silent>  <leader>i   <esc>:call AddId()<cr>
 " Simple map }}}
 
 "autocmd BufEnter    *.gtd echom "BufEnter"
