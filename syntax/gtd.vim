@@ -58,8 +58,18 @@ syn match   gtdOverdue "[^\]]*\[o:"me=e-3 contains=gtdDate,gtdContext,gtdWorker,
 syn match   gtdFinished '.\+\[f:\d\{4}.\d\{2}.\d\{2}\]' contains=gtdOverdueDate,gtdDaily,gtdDailyFinished,gtdDailyFailed,gtdShould,gtdShouldNot
 
 " ----------------------------------------
+" Moved away 子弹笔记的移走
+syn match   gtdMovedAway '\* > .*'
+
+" ----------------------------------------
+" Moved in 子弹笔记的移入
+syn match   gtdMovedIn '\* < .*'
+syn match   gtdMovedIn '^\s*< .*'
+
+" ----------------------------------------
 " Failed
-syn match   gtdFailed '^\s*\~\s.*'
+syn match   gtdFailed '^\s*\~ .*'
+syn match   gtdFailed '\* \~ .*'
 
 
 " ----------------------------------------
@@ -128,11 +138,13 @@ if exists("g:gtd_use_solamo_color") && g:gtd_use_solamo_color
 "    hi  link    gtdSubstep              PreProc
     hi  link    gtdFinished             hl_green_d
     hi  link    gtdFailed               hl_red
+    hi  link    gtdMovedIn              hl_cyan_d
     hi  link    gtdContext              hl_cyan
     hi  link    gtdWorker               hl_brown
     hi          gtdBold                 cterm=bold              gui=bold
     hi  link    gtdNote                 Comment
     hi  link    gtdComment              Comment
+    hi  link    gtdMovedAway            Comment
     hi          gtdBrace                ctermfg=DarkGray        guifg=#303030
     hi  link    gtdItemId               hl_gray_dd
 else
@@ -153,6 +165,7 @@ else
     hi          gtdLowPrio              ctermfg=DarkGray        guifg=DarkGray
     hi          gtdFinished             ctermfg=DarkGreen       guifg=DarkGreen
     hi          gtdFailed               ctermfg=DarkRed         guifg=DarkRed
+    hi          gtdMovedIn              ctermfg=Magenta         guifg=DarkCyan
     hi          gtdContext              ctermfg=DarkCyan        guifg=DarkCyan
     hi          gtdWorker               ctermfg=Blue            guifg=Blue
     hi          gtdBold                 cterm=bold              gui=bold

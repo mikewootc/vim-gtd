@@ -37,6 +37,7 @@ autocmd FileType gtt        nnoremap <buffer>           u           <c-w>j u:w<c
 
 autocmd FileType gtd        vnoremap <buffer> <silent>  <leader>gc  :call GtdResetDaily()<cr>
 autocmd FileType gtd        inoremap <buffer>           [] [ ] 
+autocmd FileType gtd        inoremap <buffer>           {{} {{{}}}<esc><left><left>i
 
 autocmd InsertLeave *.gtd call AlignDate()
 
