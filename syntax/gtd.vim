@@ -70,6 +70,7 @@ syn match   gtdMovedIn '^\s*< .*'
 " Failed
 syn match   gtdFailed '^\s*\~ .*'
 syn match   gtdFailed '\* \~ .*'
+syn match   gtdFailed '\d\+\. \~ .*'
 
 
 " ----------------------------------------
