@@ -106,6 +106,7 @@ syn match   gtdNote "^\s*>.*" contains=ALL
 " ----------------------------------------
 " Comment
 syn match   gtdComment "\/\/.*" contains=gtdShouldNot,gtdShould
+syn match   gtdComment "\s*\d\+\. \+\/\/.*" contains=gtdShouldNot,gtdShould
 
 " ----------------------------------------
 " Brace
